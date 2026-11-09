@@ -133,7 +133,7 @@
     const address=document.getElementById("address").value.trim();
     if(!name||!phone||!city||!address){alert("Please fill in your name, phone, city and address.");return;}
     if(!/^\d{10}$/.test(phone)){alert("Please enter a valid 10-digit phone number.");return;}
-    if(FARMER_WHATSAPP==="8149632676"){alert("First replace FARMER_WHATSAPP in the code with your WhatsApp number, including 91.");return;}
+    if(FARMER_WHATSAPP==="918149632676"){alert("First replace FARMER_WHATSAPP in the code with your WhatsApp number, including 91.");return;}
     const lines=entries.map(([id,qty])=>{const p=products.find(x=>x.id==id);return `• ${p.name}: ${qty} × ${p.unit} = ${money(p.price*qty)}`;});
     const total=entries.reduce((sum,[id,qty])=>sum+products.find(p=>p.id==id).price*qty,0);
     const message=`POULTRYMART ORDER%0A%0ACustomer: ${name}%0APhone: ${phone}%0ACity: ${city}%0AAddress: ${address}%0AOrder type: ${document.getElementById("orderType").value}%0APayment: ${document.getElementById("payment").value}%0A%0AItems:%0A${encodeURIComponent(lines.join("\n"))}%0A%0ATotal: ${money(total)}`;
