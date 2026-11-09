@@ -1,139 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#176b3a">
-  <title>PoultryMart | Fresh Eggs & Chicken</title>
-  <style>
-    :root{--green:#176b3a;--green2:#23864b;--cream:#fffaf0;--ink:#1d2b22;--muted:#66736a;--line:#e4eadf}
-    *{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f8f3;color:var(--ink)}
-    header{background:linear-gradient(135deg,var(--green),#2d9856);color:white;padding:22px 16px 28px}
-    .wrap{max-width:1050px;margin:auto} .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .brand{font-size:25px;font-weight:800;letter-spacing:.2px}.tag{font-size:13px;opacity:.92;margin-top:5px}
-    .badge{background:#ffffff22;border:1px solid #ffffff55;padding:8px 11px;border-radius:20px;font-size:12px}
-    .hero{padding-top:26px;max-width:620px}.hero h1{font-size:clamp(27px,6vw,42px);line-height:1.1;margin:0 0 10px}
-    .hero p{margin:0;line-height:1.5;color:#e9f7ed}
-    main{padding:18px 14px 42px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 18px}
-    input,select,textarea,button{font:inherit} .search{flex:1;min-width:190px}
-    .field{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:10px;background:white;outline:none}
-    .field:focus{border-color:var(--green2);box-shadow:0 0 0 3px #23864b18}
-    .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
-    .filter{border:1px solid var(--line);background:white;padding:9px 14px;border-radius:20px;cursor:pointer}
-    .filter.active{background:var(--green);color:white;border-color:var(--green)}
-    .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:12px 0}
-    .section-title h2{font-size:21px;margin:0}.small{font-size:12px;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:13px}
-    .card{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden;box-shadow:0 3px 12px #183b2110}
-    .photo{height:105px;display:grid;place-items:center;background:var(--cream);font-size:49px}
-    .details{padding:12px}.details h3{font-size:15px;margin:0 0 6px}.price{font-size:18px;font-weight:800;color:var(--green);margin:7px 0 10px}
-    .unit{font-size:12px;font-weight:400;color:var(--muted)}.add{width:100%;border:0;border-radius:9px;background:var(--green);color:white;padding:10px;font-weight:700;cursor:pointer}
-    .add:active,.primary:active{transform:scale(.98)}
-    .layout{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-top:24px;align-items:start}
-    .panel{background:white;border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 3px 12px #183b2110}
-    .panel h2{font-size:20px;margin:0 0 13px}.cart-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding:10px 0;font-size:14px}
-    .qty{display:flex;align-items:center;gap:8px}.qty button{border:1px solid var(--line);background:#f8faf6;border-radius:7px;width:27px;height:27px;cursor:pointer}
-    .total{display:flex;justify-content:space-between;font-weight:800;font-size:18px;padding:14px 0}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
-    label{font-size:12px;color:var(--muted);display:block;margin:8px 0 5px}
-    .primary{width:100%;border:0;background:#168044;color:white;border-radius:10px;padding:13px;font-weight:800;cursor:pointer}
-    .note{font-size:12px;line-height:1.5;color:var(--muted);margin-top:10px}
-    .empty{color:var(--muted);font-size:14px;padding:12px 0}
-    footer{text-align:center;color:var(--muted);font-size:12px;padding:22px}
-    @media(max-width:700px){.layout{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.badge{display:none}}
-  </style>
-</head>
-<body>
-<header>
-  <div class="wrap">
-    <div class="top"><div><div class="brand">🐔 PoultryMart</div><div class="tag">Fresh eggs • Country chicken • Broiler • Chicks</div></div><div class="badge">Retail + Wholesale</div></div>
-    <div class="hero"><h1>Fresh from the farm to your home.</h1><p>Browse poultry products, add what you need to your cart, and send your order directly to the seller on WhatsApp.</p></div>
-  </div>
-</header>
-<main class="wrap">
-  <div class="toolbar"><input id="search" class="field search" placeholder="Search eggs, chicken, chicks..." oninput="renderProducts()"></div>
-  <div class="filters">
-    <button class="filter active" onclick="setCategory('All',this)">All</button>
-    <button class="filter" onclick="setCategory('Eggs',this)">Eggs</button>
-    <button class="filter" onclick="setCategory('Chicken',this)">Chicken</button>
-    <button class="filter" onclick="setCategory('Chicks',this)">Chicks</button>
-  </div>
-  <div class="section-title"><h2>Our Products</h2><span class="small">Sample prices — edit before launch</span></div>
-  <div id="products" class="grid"></div>
-  <div class="layout">
-    <section class="panel">
-      <h2>🛒 Your Cart</h2><div id="cart"></div>
-      <div class="total"><span>Total</span><span id="total">₹0</span></div>
-      <div class="note">Final price, delivery charges and availability will be confirmed by the seller.</div>
-    </section>
-    <section class="panel">
-      <h2>📦 Order Details</h2>
-      <div class="form-grid">
-        <div class="full"><label for="customer">Your name</label><input class="field" id="customer" placeholder="Enter your name"></div>
-        <div><label for="phone">Phone number</label><input class="field" id="phone" type="tel" placeholder="10-digit number"></div>
-        <div><label for="city">City</label><input class="field" id="city" placeholder="Your city"></div>
-        <div class="full"><label for="address">Delivery address</label><textarea class="field" id="address" rows="2" placeholder="House, street, area"></textarea></div>
-        <div><label for="orderType">Order type</label><select class="field" id="orderType"><option>Retail</option><option>Wholesale</option></select></div>
-        <div><label for="payment">Payment</label><select class="field" id="payment"><option>Cash on Delivery</option><option>Online payment (confirm with seller)</option></select></div>
-      </div>
-      <button class="primary" style="margin-top:14px" onclick="sendOrder()">Send Order on WhatsApp</button>
-      <p class="note">Before using this site, replace the seller WhatsApp number in the code. This demo sends the order through WhatsApp; it does not store orders in a database or collect online payments.</p>
-    </section>
-  </div>
-</main>
-<footer>© <span id="year"></span> PoultryMart • Farm-fresh poultry marketplace</footer>
-<script>
-  // IMPORTANT: Replace with your WhatsApp number including country code, without + or spaces.
-  const FARMER_WHATSAPP = "91+8149632676";
-
-  const products = [
-    {id:1,name:"Brown Egg",category:"Eggs",price:15,unit:"per piece",icon:"🥚"},
-    {id:2,name:"White Egg",category:"Eggs",price:8,unit:"per piece",icon:"🥚"},
-    {id:3,name:"Desi Egg",category:"Eggs",price:15,unit:"per piece",icon:"🐣"},
-    {id:4,name:"Country Chicken Hen",category:"Chicken",price:600,unit:"per bird",icon:"🐔"},
-    {id:5,name:"Country Chicken Cock",category:"Chicken",price:700,unit:"per bird",icon:"🐓"},
-    {id:6,name:"Broiler Chicken",category:"Chicken",price:160,unit:"per kg",icon:"🍗"},
-    {id:7,name:"Country Chicks",category:"Chicks",price:50,unit:"per chick",icon:"🐤"}
-  ];
-  let cart = {};
-  let category = "All";
-  const money = n => "₹" + Number(n).toLocaleString("en-IN");
-  function setCategory(c,button){
-    category=c;
-    document.querySelectorAll(".filter").forEach(b=>b.classList.remove("active"));
-    button.classList.add("active"); renderProducts();
-  }
-  function renderProducts(){
-    const q=document.getElementById("search").value.toLowerCase();
-    const list=products.filter(p=>(category==="All"||p.category===category)&&p.name.toLowerCase().includes(q));
-    document.getElementById("products").innerHTML=list.map(p=>`
-      <article class="card"><div class="photo">${p.icon}</div><div class="details">
-      <h3>${p.name}</h3><div class="price">${money(p.price)} <span class="unit">/ ${p.unit.replace("per ","")}</span></div>
-      <button class="add" onclick="changeQty(${p.id},1)">Add to cart</button></div></article>`).join("") || '<p class="empty">No matching products found.</p>';
-  }
-  function changeQty(id,delta){
-    cart[id]=(cart[id]||0)+delta;if(cart[id]<=0)delete cart[id];renderCart();
-  }
-  function renderCart(){
-    const entries=Object.entries(cart);
-    document.getElementById("cart").innerHTML=entries.length?entries.map(([id,qty])=>{
-      const p=products.find(x=>x.id==id);
-      return `<div class="cart-row"><div><strong>${p.name}</strong><br><span class="small">${money(p.price)} × ${qty}</span></div>
-      <div class="qty"><button onclick="changeQty(${id},-1)">−</button><b>${qty}</b><button onclick="changeQty(${id},1)">+</button></div></div>`;
-    }).join(""):'<div class="empty">Your cart is empty. Add products to begin.</div>';
-    const total=entries.reduce((sum,[id,qty])=>sum+products.find(p=>p.id==id).price*qty,0);
-    document.getElementById("total").textContent=money(total);
-  }
-  function sendOrder(){
-    const entries=Object.entries(cart);
-    if(!entries.length){alert("Please add at least one product to your cart.");return;}
-    const name=document.getElementById("customer").value.trim();
-    const phone=document.getElementById("phone").value.trim();
-    const city=document.getElementById("city").value.trim();
-    const address=document.getElementById("address").value.trim();
-    if(!name||!phone||!city||!address){alert("Please fill in your name, phone, city and address.");return;}
-    if(!/^\d{10}$/.test(phone)){alert("Please enter a valid 10-digit phone number.");return;}
-    if(FARMER_WHATSAPP==="918149632676"){alert("First replace FARMER_WHATSAPP in the code with your WhatsApp number, including 91.");return;}
+ATSAPP in the code with your WhatsApp number, including 91.");return;}
     const lines=entries.map(([id,qty])=>{const p=products.find(x=>x.id==id);return `• ${p.name}: ${qty} × ${p.unit} = ${money(p.price*qty)}`;});
     const total=entries.reduce((sum,[id,qty])=>sum+products.find(p=>p.id==id).price*qty,0);
     const message=`POULTRYMART ORDER%0A%0ACustomer: ${name}%0APhone: ${phone}%0ACity: ${city}%0AAddress: ${address}%0AOrder type: ${document.getElementById("orderType").value}%0APayment: ${document.getElementById("payment").value}%0A%0AItems:%0A${encodeURIComponent(lines.join("\n"))}%0A%0ATotal: ${money(total)}`;
@@ -144,3 +9,16 @@
 </script>
 </body>
 </html>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#176b3a"><title>PoultryMart</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f8f3;color:#203126;font:16px Arial,sans-serif}
+header{background:#176b3a;color:white;padding:24px 16px}.wrap{max-width:1000px;margin:auto}
+h1{margin:0 0 8px}.muted{color:#66736a;font-size:13px}.field{width:100%;padding:12px;border:1px solid #dce5da;border-radius:9px;margin:5px 0 10px;font:inherit}
+main{padding:18px 14px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;background:#176b3a;color:white;font-weight:bold}
+.filters button{background:white;color:#176b3a;border:1px solid #dce5da}.filters .active{background:#176b3a;color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.card,.panel{background:white;border:1px solid #e2e9df;border-radius:13px;padding:13px}.emoji{text-align:center;font-size:42px;background:#fffaf0;padding:14px}
+.price{font-weight:bold;color:#176b3a;font-size:18px;margin:8px 0}.layout{display:grid;g
