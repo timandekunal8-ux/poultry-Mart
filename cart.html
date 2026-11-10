@@ -1,1 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoultryMart | Farm Fresh Products</title>
 
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7f2;
+  color: #222;
+}
+
+header {
+  background: #176b38;
+  color: white;
+  padding: 18px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 27px;
+}
+
+header p {
+  margin-top: 5px;
+}
+
+nav {
+  background: #104d29;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+}
+
+nav button {
+  background: white;
+  color: #176b38;
+  border: none;
+  padding: 11px 17px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+h2 {
+  margin-bottom: 18px;
+  color: #176b38;
+}
+
+h3 {
+  margin-bottom: 10px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 7px 0 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+button {
+  cursor: pointer;
+}
+
+.primary {
+  background: #176b38;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.danger {
+  background: #c62828;
+  color: white;
+  border: none;
+  padding: 9px 13px;
+  border-radius: 5px;
+}
+
+.secondary {
+  background: #e7eee8;
+  color: #176b38;
+  border: none;
+  padding: 9px 13px;
+  border-radius: 5px;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0001;
+}
+
+.card img {
+  width: 100%;
+  height: 165px;
+  object-fit: cover;
+  border-radius: 7px;
+  background: #eee;
+}
+
+.card h3 {
+  margin-top: 10px;
+}
+
+.price {
+  color: #176b38;
+  font-size: 19px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.card button {
+  margin-top: 8px;
+}
+
+.section-box {
+  background: white;
+  padding: 18px;
+  border-radius: 9px;
+  margin-bottom: 20px;
+}
+
+.cart-item, .order-item {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.cart-item button {
+  margin: 5px;
+}
+
+.total {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 18px 0;
+}
+
+.status {
+  color: #176b38;
+  font-weight: bold;
+}
+
+.message {
+  padding: 12px;
+  margin: 12px 0;
+  border-radius: 6px;
+  background: #e7f4e9;
+  color: #176b38;
+}
+
+.error {
+  background: #ffebee;
+  color: #b71c1c;
+}
+
+footer {
+  background: #104d29;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 35px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.small {
+  color: #666;
+  font-size: 13px;
+}
+
+@media(max-width: 600px) {
+  header h1 {
+    font-size: 23px;
+  }
+
+  nav button {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .container {
+    padding: 13px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🐔 PoultryMart</h1>
+  <p>Farm Fresh Chicken, Eggs & More</p>
+</header>
+
+<nav>
+  <button data-page="home">Home</button>
+  <button data-page="shop">Shop</button>
+  <button data-page="cart">Cart (<span id="cartCount">0</span>)</button>
+  <button data-page="admin">Admin</button>
+</nav>
+<!-- HOME PAGE -->
+
+<main id="homePage" class="container">
+
+  <section style="background:linear-gradient(120deg,#104d29,#238447);color:white;padding:55px 25px;border-radius:15px;text-align:center;margin-bottom:25px;">
+
+    <h1 style="font-size:36px;">Welcome to PoultryMart</h1>
+
+    <h2 style="color:white;">Fresh From Our Farm to Your Home</h2>
+
+    <p>Farm Fresh Eggs, Country Chicken, Chicks & More.</p>
+
+    <button class="primary" style="background:white;color:#176b38;"
+      onclick="showPage('shop')">
+      SHOP NOW
+    </button>
+
+  </section>
+
+  <section class="section-box">
+    <h2>Why Choose PoultryMart?</h2>
+
+    <div class="products">
+
+      <div class="card">
+        <h3>🥚 Farm Fresh Eggs</h3>
+        <p>Fresh eggs directly from our farm.</p>
+      </div>
+
+      <div class="card">
+        <h3>🐔 Quality Chicken</h3>
+        <p>Quality poultry products for your family.</p>
+      </div>
+
+      <div class="card">
+        <h3>🐣 Healthy Chicks</h3>
+        <p>Explore our farm-raised chicks.</p>
+      </div>
+
+      <div class="card">
+        <h3>🚚 Easy Ordering</h3>
+        <p>Order conveniently from your phone.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section-box" style="text-align:center;">
+    <h2>Explore Our Products</h2>
+    <p>Discover fresh products from PoultryMart.</p>
+
+    <button class="primary" onclick="showPage('shop')">
+      Explore Products
+    </button>
+  </section>
+
+</main>
+<!-- SHOP PAGE -->
+
+<main id="shopPage" class="container">
+
+  <h2>Our Products</h2>
+
+  <div class="section-box">
+    <label for="categoryFilter"><b>Select Category</b></label>
+
+    <select id="categoryFilter">
+      <option value="all">All Categories</option>
+      <option value="Eggs">Eggs</option>
+      <option value="Chicken">Chicken</option>
+      <option value="Chicks">Chicks</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <input
+      type="text"
+      id="searchProduct"
+      placeholder="Search products..."
+    >
+  </div>
+
+  <div id="productList" class="products">
+    Loading products...
+  </div>
+
+</main>
+
+<!-- CART PAGE -->
+
+<main id="cartPage" class="container hidden">
+
+  <h2>Your Shopping Cart</h2>
+
+  <div id="cartItems"></div>
+
+  <div class="total">
+    Total: ₹<span id="cartTotal">0</span>
+  </div>
+
+  <div class="section-box">
+
+    <h3>Customer Details</h3>
+
+    <form id="checkoutForm">
+
+      <label>Full Name</label>
+      <input id="customerName" required placeholder="Enter your name">
+
+      <label>Mobile Number</label>
+      <input
+        id="customerPhone"
+        type="tel"
+        pattern="[0-9]{10}"
+        maxlength="10"
+        required
+        placeholder="10 digit mobile number"
+      >
+
+      <label>Delivery Type</label>
+      <select id="deliveryType" required>
+        <option value="Pickup">Farm Pickup</option>
+        <option value="Home Delivery">Home Delivery</option>
+      </select>
+
+      <label>Delivery Address</label>
+      <textarea
+        id="customerAddress"
+        rows="3"
+        placeholder="Enter delivery address if required"
+      ></textarea>
+
+      <button
+        type="submit"
+        class="primary"
+        id="placeOrderButton"
+      >
+        Place Order
+      </button>
+
+    </form>
+
+    <div id="orderResult"></div>
+
+  </div>
+
+</main>
+
+<!-- ADMIN LOGIN -->
+
+<main id="adminLoginPage" class="container hidden">
+
+  <div class="section-box">
+
+    <h2>Admin Login</h2>
+
+    <form id="adminLoginForm">
+
+      <label>Email</label>
+      <input
+        type="email"
+        id="adminEmail"
+        required
+        placeholder="Admin email"
+      >
+
+      <label>Password</label>
+      <input
+        type="password"
+        id="adminPassword"
+        required
+        placeholder="Password"
+      >
+
+      <button type="submit" class="primary">
+  Login
+</button>
+
+<br><br>
+
+<button type="button" class="secondary" onclick="resetAdminPassword()">
+  Forgot Password?
+</button>
+
+    </form>
+
+    <div id="loginMessage"></div>
+
+  </div>
+
+</main>
+
+<!-- ADMIN DASHBOARD -->
+
+<main id="adminDashboardPage" class="container hidden">
+
+  <h2>Admin Dashboard</h2>
+
+  <button class="danger" id="logoutButton">
+    Logout
+  </button>
+
+  <br><br>
+
+  <div class="section-box">
+
+    <h3>Add New Product</h3>
+
+    <form id="productForm">
+
+      <label>Product Name</label>
+      <input id="productName" required placeholder="Example: Brown Eggs">
+
+      <label>Category</label>
+      <select id="productCategory" required>
+        <option value="Eggs">Eggs</option>
+        <option value="Chicken">Chicken</option>
+        <option value="Chicks">Chicks</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Price (₹)</label>
+      <input
+        type="number"
+        id="productPrice"
+        min="0.01"
+        step="0.01"
+        required
+        placeholder="Enter price"
+      >
+
+      <label>Unit</label>
+      <input
+        id="productUnit"
+        required
+        placeholder="Example: per dozen / per kg / per piece"
+      >
+
+      <label>Image URL</label>
+      <input
+        type="url"
+        id="productImage"
+        placeholder="Paste product image link"
+      >
+
+      <label>Description</label>
+      <textarea
+        id="productDescription"
+        placeholder="Product details"
+      ></textarea>
+
+      <button type="submit" class="primary" id="saveProductButton">
+        Add Product
+      </button>
+
+    </form>
+
+    <div id="productMessage"></div>
+
+  </div>
+
+  <div class="section-box">
+
+    <h3>Manage Products</h3>
+    <div id="adminProductList">Loading...</div>
+
+  </div>
+
+  <div class="section-box">
+
+    <h3>Customer Orders</h3>
+    <div id="adminOrderList">Loading...</div>
+
+  </div>
+
+</main>
+
+<footer>
+  <h3>PoultryMart</h3>
+  <p>Fresh from Our Farm to Your Home</p>
+  <p>For enquiries: +91 8149632676</p>
+</footer>
+
+<!-- FIREBASE LIBRARIES -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+
+// ======================================
+// 1. FIREBASE CONFIGURATION
+// ======================================
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDmQQusRmXoN7LP4W17m3834iZxIvAfWeA",
+  authDomain: "poultry-mart-3b6c7.firebaseapp.com",
+  projectId: "poultry-mart-3b6c7",
+  storageBucket: "poultry-mart-3b6c7.firebasestorage.app",
+  messagingSenderId: "917433171766",
+  appId: "1:917433171766:web:17283e7fe1893748cb3d97",
+  measurementId: "G-QYHCTZ1J5Z"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const ADMIN_EMAIL = "timandekunal8@gmail.com";
+const WHATSAPP_NUMBER = "918149632676";
+
+let isAdmin = false;
+let currentPage = "shop";
+let products = [];
+let cart = JSON.parse(localStorage.getItem("poultryCart") || "[]");
+
+
+// ======================================
+// 2. HELPER FUNCTIONS
+// ======================================
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, function(char) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[char];
+  });
+}
+
+function safeImageURL(value) {
+  try {
+    const url = new URL(value);
+    if (url.protocol === "https:" || url.protocol === "http:") {
+      return url.href;
+    }
+  } catch (error) {}
+  return "";
+}
+
+function showMessage(elementId, message, isError = false) {
+  const element = document.getElementById(elementId);
+  element.textContent = message;
+  element.className = isError ? "message error" : "message";
+}
+
+function money(value) {
+  return Number(value || 0).toFixed(2);
+}
+
+
+// ======================================
+// 3. PAGE NAVIGATION
+// ======================================
+function showPage(page) {
+
+  currentPage = page;
+
+  document.getElementById("homePage").classList.add("hidden");
+  document.getElementById("shopPage").classList.add("hidden");
+  document.getElementById("cartPage").classList.add("hidden");
+  document.getElementById("adminLoginPage").classList.add("hidden");
+  document.getElementById("adminDashboardPage").classList.add("hidden");
+
+  if (page === "home") {
+    document.getElementById("homePage").classList.remove("hidden");
+  }
+
+  if (page === "shop") {
+    document.getElementById("shopPage").classList.remove("hidden");
+  }
+
+  if (page === "cart") {
+    document.getElementById("cartPage").classList.remove("hidden");
+    renderCart();
+  }
+
+  if (page === "admin") {
+
+    if (isAdmin) {
+      document.getElementById("adminDashboardPage").classList.remove("hidden");
+      loadAdminData();
+    } else {
+      document.getElementById("adminLoginPage").classList.remove("hidden");
+    }
+
+  }
+
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll("[data-page]").forEach(function(button) {
+
+  button.addEventListener("click", function() {
+    showPage(button.dataset.page);
+  });
+
+});
+
+
+
+// ======================================
+// 4. LOAD PRODUCTS
+// ======================================
+
+async function loadProducts() {
+
+  const productList = document.getElementById("productList");
+
+  productList.textContent = "Loading products...";
+
+  try {
+
+    const snapshot = await db.collection("products").get();
+
+    products = [];
+
+    snapshot.forEach(function(doc) {
+
+      const data = doc.data();
+
+      if (data.active !== false) {
+        products.push({
+          id: doc.id,
+          ...data
+        });
+      }
+
+    });
+
+    renderProducts();
+
+  } catch (error) {
+
+    console.error(error);
+
+    productList.textContent =
+      "Unable to load products. Please check your internet connection and Firestore rules.";
+
+  }
+
+}
+
+
+// ======================================
+// 5. DISPLAY PRODUCTS
+// ======================================
+
+function renderProducts() {
+
+  const productList = document.getElementById("productList");
+
+  const category = document.getElementById("categoryFilter").value;
+
+  const search = document.getElementById("searchProduct").value
+    .trim()
+    .toLowerCase();
+
+  const filtered = products.filter(function(product) {
+
+    const matchesCategory =
+      category === "all" || product.category === category;
+
+    const matchesSearch =
+      String(product.name || "").toLowerCase().includes(search);
+
+    return matchesCategory && matchesSearch;
+
+  });
+
+  if (filtered.length === 0) {
+
+    productList.innerHTML =
+      "<p>No products available. Please check again later.</p>";
+
+    return;
+
+  }
+
+  productList.innerHTML = filtered.map(function(product) {
+
+    const image = safeImageURL(product.image);
+
+    return `
+      <div class="card">
+
+        ${
+          image
+          ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(product.name)}">`
+          : `<div style="height:165px;background:#e8eee8;display:flex;align-items:center;justify-content:center;border-radius:7px;">🐔 PoultryMart</div>`
+        }
+
+        <h3>${escapeHTML(product.name)}</h3>
+
+        <p>${escapeHTML(product.description || "")}</p>
+
+        <p class="price">
+          ₹${money(product.price)}
+          <span style="font-size:13px;">
+            / ${escapeHTML(product.unit || "piece")}
+          </span>
+        </p>
+
+        <button
+          class="primary"
+          onclick="addToCart('${product.id}')"
+        >
+          Add to Cart
+        </button>
+
+      </div>
+    `;
+
+  }).join("");
+
+}
+
+document.getElementById("categoryFilter")
+  .addEventListener("change", renderProducts);
+
+document.getElementById("searchProduct")
+  .addEventListener("input", renderProducts);
+
+
+// ======================================
+// 6. SHOPPING CART
+// ======================================
+
+function saveCart() {
+
+  localStorage.setItem("poultryCart", JSON.stringify(cart));
+
+  updateCartCount();
+
+}
+
+function updateCartCount() {
+
+  const count = cart.reduce(function(total, item) {
+    return total + item.quantity;
+  }, 0);
+
+  document.getElementById("cartCount").textContent = count;
+
+}
+
+function addToCart(productId) {
+
+  const product = products.find(function(item) {
+    return item.id === productId;
+  });
+
+  if (!product) {
+    alert("Product not found.");
+    return;
+  }
+
+  const existing = cart.find(function(item) {
+    return item.id === productId;
+  });
+
+  if (existing) {
+
+    existing.quantity++;
+
+  } else {
+
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: Number(product.price),
+      unit: product.unit || "piece",
+      quantity: 1
+    });
+
+  }
+
+  saveCart();
+
+  alert("Product added to cart!");
+
+}
+
+function changeQuantity(productId, change) {
+
+  const item = cart.find(function(item) {
+    return item.id === productId;
+  });
+
+  if (!item) return;
+
+  item.quantity += change;
+
+  if (item.quantity <= 0) {
+    cart = cart.filter(function(item) {
+      return item.id !== productId;
+    });
+  }
+
+  saveCart();
+  renderCart();
+
+}
+
+function removeCartItem(productId) {
+
+  cart = cart.filter(function(item) {
+    return item.id !== productId;
+  });
+
+  saveCart();
+  renderCart();
+
+}
+
+function calculateTotal() {
+
+  return cart.reduce(function(total, item) {
+
+    return total + (Number(item.price) * item.quantity);
+
+  }, 0);
+
+}
+
+function renderCart() {
+
+  const cartItems = document.getElementById("cartItems");
+
+  if (cart.length === 0) {
+
+    cartItems.innerHTML = "<p>Your cart is empty.</p>";
+
+    document.getElementById("cartTotal").textContent = "0.00";
+
+    return;
+
+  }
+
+  cartItems.innerHTML = cart.map(function(item) {
+
+    return `
+      <div class="cart-item">
+
+        <h3>${escapeHTML(item.name)}</h3>
+
+        <p>₹${money(item.price)} / ${escapeHTML(item.unit)}</p>
+
+        <p>
+          Quantity: ${item.quantity}
+        </p>
+
+        <p>
+          Subtotal: ₹${money(item.price * item.quantity)}
+        </p>
+
+        <button class="secondary"
+          onclick="changeQuantity('${item.id}', -1)">
+          −
+        </button>
+
+        <button class="secondary"
+          onclick="changeQuantity('${item.id}', 1)">
+          +
+        </button>
+
+        <button class="danger"
+          onclick="removeCartItem('${item.id}')">
+          Remove
+        </button>
+
+      </div>
+    `;
+
+  }).join("");
+
+  document.getElementById("cartTotal").textContent =
+    money(calculateTotal());
+
+}
+
+
+// ======================================
+// 7. CUSTOMER CHECKOUT
+// ======================================
+
+document.getElementById("checkoutForm").addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  if (cart.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  const button = document.getElementById("placeOrderButton");
+
+  const result = document.getElementById("orderResult");
+
+  const customerName =
+    document.getElementById("customerName").value.trim();
+
+  const phone =
+    document.getElementById("customerPhone").value.trim();
+
+  const deliveryType =
+    document.getElementById("deliveryType").value;
+
+  const address =
+    document.getElementById("customerAddress").value.trim();
+
+  if (!/^[0-9]{10}$/.test(phone)) {
+    alert("Please enter a valid 10 digit mobile number.");
+    return;
+  }
+
+  if (deliveryType === "Home Delivery" && !address) {
+    alert("Please enter your delivery address.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Placing Order...";
+
+  try {
+
+    const orderItems = cart.map(function(item) {
+
+      return {
+        productId: item.id,
+        name: item.name,
+        price: Number(item.price),
+        unit: item.unit,
+        quantity: Number(item.quantity)
+      };
+
+    });
+
+    const total = calculateTotal();
+
+    const orderData = {
+      customerName: customerName,
+      phone: phone,
+      deliveryType: deliveryType,
+      address: address,
+      items: orderItems,
+      total: total,
+      status: "Pending",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    const orderRef = await db.collection("orders").add(orderData);
+
+    let message =
+      "Hello PoultryMart! I have placed an order.%0A%0A";
+
+    message += "Order ID: " + orderRef.id + "%0A";
+    message += "Name: " + encodeURIComponent(customerName) + "%0A";
+    message += "Phone: " + phone + "%0A";
+    message += "Delivery: " + encodeURIComponent(deliveryType) + "%0A";
+
+    orderItems.forEach(function(item) {
+
+      message +=
+        encodeURIComponent(item.name) +
+        " x " + item.quantity +
+        " = Rs. " + (item.price * item.quantity) +
+        "%0A";
+
+    });
+
+    message += "%0ATotal: Rs. " + total;
+
+    cart = [];
+
+    saveCart();
+    renderCart();
+
+    document.getElementById("checkoutForm").reset();
+
+    result.innerHTML = `
+      <div class="message">
+        <h3>Order placed successfully!</h3>
+        <p>Your Order ID: ${escapeHTML(orderRef.id)}</p>
+        <p>Total: ₹${money(total)}</p>
+        <p>Please contact us on WhatsApp to confirm your order.</p>
+        <br>
+        <a
+          href="https://wa.me/${WHATSAPP_NUMBER}?text=${message}"
+          target="_blank"
+          rel="noopener"
+        >
+          <button type="button" class="primary">
+            Confirm on WhatsApp
+          </button>
+        </a>
+      </div>
+    `;
+
+  } catch (error) {
+
+    console.error(error);
+
+    result.textContent =
+      "Order failed: " + error.message;
+
+    result.className = "message error";
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "Place Order";
+
+  }
+
+});
+
+
+// ======================================
+// 8. ADMIN LOGIN
+// ======================================
+
+document.getElementById("adminLoginForm").addEventListener("submit", async function(event) {
+
+event.preventDefault();
+
+const email = document.getElementById("adminEmail").value.trim();
+const password = document.getElementById("adminPassword").value;
+
+if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+showMessage("loginMessage", "This email is not authorized.", true);
+return;
+}
+
+try {
+const result = await auth.signInWithEmailAndPassword(email, password);
+
+if (result.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+  isAdmin = true;
+  showPage("admin");
+  showMessage("loginMessage", "Login successful!");
+}
+
+} catch (error) {
+showMessage("loginMessage", error.message, true);
+}
+
+});
+// ======================================
+// 10. ADMIN LOGOUT
+// ======================================
+
+document.getElementById("logoutButton").addEventListener("click", async function() {
+
+  try {
+
+    await auth.signOut();
+
+    isAdmin = false;
+
+    showPage("shop");
+
+  } catch (error) {
+
+    alert(error.message);
+
+  }
+
+});
+
+
+// ======================================
+// 11. ADD PRODUCT
+// ======================================
+
+document.getElementById("productForm").addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  if (!isAdmin) {
+    alert("Admin login required.");
+    return;
+  }
+
+  const name =
+    document.getElementById("productName").value.trim();
+
+  const category =
+    document.getElementById("productCategory").value;
+
+  const price =
+    Number(document.getElementById("productPrice").value);
+
+  const unit =
+    document.getElementById("productUnit").value.trim();
+
+  const image =
+    document.getElementById("productImage").value.trim();
+
+  const description =
+    document.getElementById("productDescription").value.trim();
+
+  if (!name || !unit || !Number.isFinite(price) || price <= 0) {
+
+    showMessage("productMessage", "Please enter valid product details.", true);
+
+    return;
+
+  }
+
+  if (image && !safeImageURL(image)) {
+
+    showMessage("productMessage", "Please enter a valid HTTP or HTTPS image URL.", true);
+
+    return;
+
+  }
+
+  try {
+
+    await db.collection("products").add({
+
+      name: name,
+      category: category,
+      price: price,
+      unit: unit,
+      image: image,
+      description: description,
+      active: true,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+    });
+
+    document.getElementById("productForm").reset();
+
+    showMessage("productMessage", "Product added successfully!");
+
+    await loadProducts();
+
+    await loadAdminProducts();
+
+  } catch (error) {
+
+    showMessage("productMessage", error.message, true);
+
+  }
+
+});
+
+
+// ======================================
+// 12. ADMIN PRODUCT MANAGEMENT
+// ======================================
+
+async function loadAdminProducts() {
+
+  const list = document.getElementById("adminProductList");
+
+  list.textContent = "Loading products...";
+
+  if (!isAdmin) return;
+
+  try {
+
+    const snapshot = await db.collection("products").get();
+
+    if (snapshot.empty) {
+
+      list.textContent = "No products added yet.";
+
+      return;
+
+    }
+
+    list.innerHTML = "";
+
+    snapshot.forEach(function(doc) {
+
+      const product = doc.data();
+
+      const box = document.createElement("div");
+
+      box.className = "order-item";
+
+      const title = document.createElement("h3");
+      title.textContent = product.name || "Unnamed product";
+
+      const details = document.createElement("p");
+      details.textContent =
+        "Category: " + (product.category || "") +
+        " | Price: ₹" + money(product.price) +
+        " / " + (product.unit || "");
+
+      const deleteButton = document.createElement("button");
+
+      deleteButton.className = "danger";
+      deleteButton.textContent = "Delete Product";
+
+      deleteButton.addEventListener("click", function() {
+        deleteProduct(doc.id);
+      });
+
+      box.appendChild(title);
+      box.appendChild(details);
+      box.appendChild(deleteButton);
+
+      list.appendChild(box);
+
+    });
+
+  } catch (error) {
+
+    list.textContent = "Error: " + error.message;
+
+  }
+
+}
+
+async function deleteProduct(productId) {
+
+  if (!isAdmin) return;
+
+  if (!confirm("Are you sure you want to delete this product?")) {
+    return;
+  }
+
+  try {
+
+    await db.collection("products").doc(productId).delete();
+
+    alert("Product deleted.");
+
+    await loadProducts();
+
+    await loadAdminProducts();
+
+  } catch (error) {
+
+    alert("Unable to delete product: " + error.message);
+
+  }
+
+}
+
+
+// ======================================
+// 13. ADMIN ORDER MANAGEMENT
+// ======================================
+
+async function loadAdminOrders() {
+
+  const list = document.getElementById("adminOrderList");
+
+  list.textContent = "Loading orders...";
+
+  if (!isAdmin) return;
+
+  try {
+
+    const snapshot = await db.collection("orders")
+      .orderBy("createdAt", "desc")
+      .get();
+
+    if (snapshot.empty) {
+
+      list.textContent = "No customer orders yet.";
+
+      return;
+
+    }
+
+    list.innerHTML = "";
+
+    snapshot.forEach(function(doc) {
+
+      const order = doc.data();
+
+      const box = document.createElement("div");
+
+      box.className = "order-item";
+
+      const title = document.createElement("h3");
+      title.textContent = "Order: " + doc.id;
+
+      const customer = document.createElement("p");
+      customer.textContent =
+        "Customer: " + (order.customerName || "");
+
+      const phone = document.createElement("p");
+      phone.textContent =
+        "Phone: " + (order.phone || "");
+
+      const delivery = document.createElement("p");
+      delivery.textContent =
+        "Delivery: " + (order.deliveryType || "");
+
+      const address = document.createElement("p");
+      address.textContent =
+        "Address: " + (order.address || "Not provided");
+
+      const total = document.createElement("p");
+      total.textContent =
+        "Total: ₹" + money(order.total);
+
+      const status = document.createElement("p");
+      status.className = "status";
+      status.textContent =
+        "Status: " + (order.status || "Pending");
+
+      const items = document.createElement("div");
+
+      const orderProducts = Array.isArray(order.items) ? order.items : [];
+
+      items.textContent = "Items: " + orderProducts.map(function(item) {
+        return (item.name || "Product") + " x " + item.quantity;
+      }).join(", ");
+
+      const select = document.createElement("select");
+
+      ["Pending", "Confirmed", "Processing", "Delivered", "Cancelled"]
+        .forEach(function(value) {
+
+          const option = document.createElement("option");
+
+          option.value = value;
+          option.textContent = value;
+
+          if ((order.status || "Pending") === value) {
+            option.selected = true;
+          }
+
+          select.appendChild(option);
+
+        });
+
+      const updateButton = document.createElement("button");
+
+      updateButton.className = "primary";
+      updateButton.textContent = "Update Status";
+
+      updateButton.addEventListener("click", function() {
+        updateOrderStatus(doc.id, select.value);
+      });
+
+      box.appendChild(title);
+      box.appendChild(customer);
+      box.appendChild(phone);
+      box.appendChild(delivery);
+      box.appendChild(address);
+      box.appendChild(items);
+      box.appendChild(total);
+      box.appendChild(status);
+      box.appendChild(select);
+      box.appendChild(updateButton);
+
+      list.appendChild(box);
+
+    });
+
+  } catch (error) {
+
+    list.textContent = "Unable to load orders: " + error.message;
+
+  }
+
+}
+
+async function updateOrderStatus(orderId, status) {
+
+  if (!isAdmin) return;
+
+  try {
+
+    await db.collection("orders").doc(orderId).update({
+      status: status
+    });
+
+    alert("Order status updated.");
+
+    await loadAdminOrders();
+
+  } catch (error) {
+
+    alert("Unable to update order: " + error.message);
+
+  }
+
+}
+
+
+// ======================================
+// 14. LOAD ADMIN DASHBOARD
+// ======================================
+
+async function loadAdminData() {
+
+  if (!isAdmin) return;
+
+  await loadAdminProducts();
+
+  await loadAdminOrders();
+
+}
+
+
+// ======================================
+// 15. WEBSITE START
+// ======================================
+
+updateCartCount();
+
+renderCart();
+
+showPage("cart");
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
