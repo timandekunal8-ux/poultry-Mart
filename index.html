@@ -1002,34 +1002,28 @@ document.getElementById("checkoutForm").addEventListener("submit", async functio
 
 document.getElementById("adminLoginForm").addEventListener("submit", async function(event) {
 
-  event.preventDefault();
+event.preventDefault();
 
-  const email =
-    document.getElementById("adminEmail").value.trim();
+const email = document.getElementById("adminEmail").value.trim();
+const password = document.getElementById("adminPassword").value;
 
-  const password =
-    document.getElementById("adminPassword").value;
+if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+showMessage("loginMessage", "This email is not authorized.", true);
+return;
+}
 
-  const loginMessage =
-    document.getElementById("loginMessage");
+try {
+const result = await auth.signInWithEmailAndPassword(email, password);
 
-  if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+if (result.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+  isAdmin = true;
+  showPage("admin");
+  showMessage("loginMessage", "Login successful!");
+}
 
-    showMessage("loginMessage", "This email is not authorized.", true);
-
-    return;
-
-  }
-
-  try {
-
-    await auth.signInWithEmailAndPassword(email, password);
-
-  } catch (error) {
-
-    showMessage("loginMessage", error.message, true);
-
-  }
+} catch (error) {
+showMessage("loginMessage", error.message, true);
+}
 
 });
 // ======================================
