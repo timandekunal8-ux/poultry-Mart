@@ -232,16 +232,19 @@ document.getElementById("checkoutForm").addEventListener("submit", async functio
     const total = calculateTotal();
 
     const orderData = {
-      customerName: customerName,
-      phone: phone,
-      deliveryType: deliveryType,
-      address: address,
-      items: orderItems,
-      total: total,
-      status: "Pending",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-
+    const orderData = {
+  customerName: customerName,
+  phone: phone,
+  deliveryType: deliveryType,
+  address: address,
+  items: orderItems,
+  total: total,
+  status: "Pending",
+  customerUid: firebase.auth().currentUser
+    ? firebase.auth().currentUser.uid
+    : null,
+  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+};
     const orderRef = await db.collection("orders").add(orderData);
 
     let message = "Hello PoultryMart! I have placed an order.%0A%0A";
