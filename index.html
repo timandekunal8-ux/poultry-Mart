@@ -3,133 +3,583 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PoultryMart</title>
+<title>PoultryMart | Farm Fresh Products</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial;background:#f6f8f5;color:#222}
-header{background:#174d2b;color:white;padding:20px;text-align:center}
-nav{background:white;padding:12px;text-align:center;position:sticky;top:0}
-button{background:#206b37;color:white;border:0;padding:11px 16px;border-radius:7px;margin:4px}
-input,select,textarea{width:100%;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:6px}
-.container{max-width:1100px;margin:auto;padding:15px}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
-.card,.panel{background:white;border-radius:10px;padding:15px;margin:12px 0;box-shadow:0 2px 8px #ddd}
-.card img{width:100%;height:160px;object-fit:cover}
-.price{font-size:20px;color:#206b37;font-weight:bold}
-.hidden{display:none!important}
-.danger{background:#c62828}
-footer{text-align:center;padding:25px;background:#174d2b;color:white}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7f4;
+  color: #222;
+}
+
+header {
+  background: #176b3a;
+  color: white;
+  padding: 16px;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: bold;
+}
+
+nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-size: 14px;
+}
+
+nav button {
+  background: white;
+  color: #176b3a;
+  font-weight: bold;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 25px auto;
+  padding: 0 15px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.hero {
+  background: #e1f1e5;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.hero h1 {
+  color: #176b3a;
+  margin-top: 0;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 11px;
+  margin: 7px 0 13px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  background: white;
+}
+
+.toolbar input,
+.toolbar select {
+  flex: 1;
+  min-width: 140px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.card, .panel {
+  background: white;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 8px #00000012;
+  margin-bottom: 16px;
+}
+
+.product-image {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #eee;
+}
+
+.image-placeholder {
+  height: 170px;
+  background: #e9f1e9;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 42px;
+}
+
+.price {
+  font-size: 19px;
+  font-weight: bold;
+  color: #176b3a;
+}
+
+.primary {
+  background: #176b3a;
+  color: white;
+}
+
+.danger {
+  background: #c62828;
+  color: white;
+}
+
+.secondary {
+  background: #e6e6e6;
+  color: #222;
+}
+
+.full {
+  width: 100%;
+}
+
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #ddd;
+  flex-wrap: wrap;
+}
+
+.qty-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-buttons button {
+  padding: 7px 12px;
+  background: #e1f1e5;
+  color: #176b3a;
+  font-weight: bold;
+}
+
+.total {
+  font-size: 22px;
+  font-weight: bold;
+  color: #176b3a;
+  text-align: right;
+  margin: 18px 0;
+}
+
+label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 9px;
+  background: #e1f1e5;
+  color: #176b3a;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+.muted {
+  color: #666;
+  font-size: 14px;
+}
+
+.success {
+  background: #e1f1e5;
+  padding: 14px;
+  border-radius: 8px;
+  color: #176b3a;
+}
+
+.error {
+  color: #c62828;
+  margin: 10px 0;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  background: #176b3a;
+  color: white;
+  margin-top: 40px;
+}
+
+a {
+  color: #176b3a;
+  font-weight: bold;
+}
+
+@media(max-width: 600px) {
+  .header-inner {
+    align-items: flex-start;
+  }
+
+  nav {
+    width: 100%;
+  }
+
+  nav button {
+    flex: 1;
+  }
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🐔 PoultryMart</h1>
-<p>Farm Fresh Eggs & Chicken</p>
+  <div class="header-inner">
+    <div class="logo">🐔 PoultryMart</div>
+
+    <nav>
+      <button data-page="shop">Shop</button>
+      <button data-page="cart">
+        Cart (<span id="cartCount">0</span>)
+      </button>
+      <button data-page="admin">Admin</button>
+    </nav>
+  </div>
 </header>
 
-<<button onclick="document.getElementById('adminLogin').classList.remove('hidden'); document.getElementById('adminLogin').scrollIntoView();">
-Admin Login
-</button>/nav>
-<button onclick="showSection('shop')">Shop</button>
-<button onclick="showSection('cart')">🛒 Cart (<span id="cartCount">0</span>)</button>
-<button onclick="showSection('adminLogin')">Admin</button>
-<<button onclick="showSection('admin')">Admin Login</button>/nav>
 
-<section id="shop" class="container">
-<h2>Our Products</h2>
-<button onclick="filterProducts('All')">All</button>
-<button onclick="filterProducts('Eggs')">Eggs</button>
-<button onclick="filterProducts('Live Chicken')">Live Chicken</button>
-<button onclick="filterProducts('Dressed Chicken')">Dressed Chicken</button>
-<p id="loading">Loading products...</p>
-<div id="productList" class="products"></div>
+<!-- SHOP PAGE -->
+<main id="shopPage" class="container">
+
+  <section class="hero">
+    <h1>Farm Fresh Products</h1>
+    <p>Fresh eggs and quality chicken directly from our farm.</p>
+    <p>Order online and contact us on WhatsApp.</p>
+  </section>
+
+  <div class="toolbar">
+    <input
+      type="search"
+      id="searchInput"
+      placeholder="Search products..."
+    >
+
+    <select id="categoryFilter">
+      <option value="All">All Categories</option>
+      <option value="Eggs">Eggs</option>
+      <option value="Live Chicken">Live Chicken</option>
+      <option value="Dressed Chicken">Dressed Chicken</option>
+    </select>
+  </div>
+
+  <div id="productList" class="grid">
+    <p>Loading products...</p>
+  </div>
+
+</main>
+
+
+<!-- CART PAGE -->
+<section id="cartPage" class="container hidden">
+
+  <h2>🛒 Your Shopping Cart</h2>
+
+  <div class="panel">
+    <div id="cartItems"></div>
+
+    <div id="cartTotal" class="total"></div>
+  </div>
+
+  <div id="checkoutPanel" class="panel hidden">
+
+    <h2>Customer Details</h2>
+
+    <form id="checkoutForm">
+
+      <label>Full Name</label>
+      <input
+        type="text"
+        id="customerName"
+        maxlength="80"
+        required
+        placeholder="Enter your name"
+      >
+
+      <label>Mobile Number</label>
+      <input
+        type="tel"
+        id="customerPhone"
+        maxlength="10"
+        required
+        placeholder="10 digit mobile number"
+      >
+
+      <label>Delivery Type</label>
+      <select id="deliveryType">
+        <option value="Home delivery">Home Delivery</option>
+        <option value="Farm pickup">Farm Pickup</option>
+      </select>
+
+      <label>Delivery Address</label>
+      <textarea
+        id="customerAddress"
+        maxlength="500"
+        placeholder="Enter complete address if home delivery"
+      ></textarea>
+
+      <label>Payment Method</label>
+      <select id="paymentMethod">
+        <option value="COD">Cash on Delivery</option>
+        <option value="UPI">UPI</option>
+      </select>
+
+      <p class="muted">
+        For UPI orders, payment details will be confirmed separately.
+      </p>
+
+      <label>Additional Instructions (Optional)</label>
+      <textarea
+        id="orderNotes"
+        maxlength="500"
+        placeholder="Any special instructions?"
+      ></textarea>
+
+      <button type="submit" id="placeOrderButton" class="primary full">
+        Place Order
+      </button>
+
+    </form>
+
+    <div id="orderResult" class="hidden success"></div>
+
+  </div>
+
 </section>
 
-<section id="cart" class="container hidden">
-<div class="panel">
-<h2>Your Cart</h2>
-<div id="cartItems"></div>
-<h3>Total: ₹<span id="cartTotal">0</span></h3>
-</div>
 
-<div class="panel">
-<h2>Customer Details</h2>
-<input id="customerName" placeholder="Full Name">
-<input id="customerPhone" placeholder="10-digit Mobile Number">
-<select id="deliveryMode">
-<option>Home Delivery</option>
-<option>Farm Pickup</option>
-</select>
-<textarea id="customerAddress" placeholder="Delivery Address"></textarea>
-<select id="paymentMode">
-<option>Cash on Delivery</option>
-<option>UPI</option>
-</select>
-<button onclick="placeOrder()">Place Order on WhatsApp</button>
-</div>
+<!-- ADMIN LOGIN PAGE -->
+<section id="adminLoginPage" class="container hidden">
+
+  <div class="panel">
+
+    <h2>🔐 Admin Login</h2>
+
+    <p class="muted">
+      Login with your authorized administrator account.
+    </p>
+
+    <form id="adminLoginForm">
+
+      <label>Email</label>
+      <input
+        type="email"
+        id="adminEmail"
+        required
+        placeholder="Admin email"
+      >
+
+      <label>Password</label>
+      <input
+        type="password"
+        id="adminPassword"
+        required
+        placeholder="Admin password"
+      >
+
+      <button type="submit" class="primary full">
+        Login
+      </button>
+
+    </form>
+
+    <p id="loginMessage" class="error"></p>
+
+  </div>
+
 </section>
 
-<section id="adminLogin" class="container hidden">
-<div class="panel">
-<h2>Admin Login</h2>
-<input id="adminEmail" type="email" placeholder="Admin Email">
-<input id="adminPassword" type="password" placeholder="Password">
-<button onclick="adminLogin()">Login</button>
-<p id="loginMessage"></p>
-</div>
+
+<!-- ADMIN DASHBOARD -->
+<section id="adminDashboardPage" class="container hidden">
+
+  <div class="panel">
+
+    <h2>Admin Dashboard</h2>
+
+    <p>Welcome to PoultryMart Administration.</p>
+
+    <button id="logoutButton" class="danger">
+      Logout
+    </button>
+
+  </div>
+
+
+  <!-- PRODUCT MANAGEMENT -->
+  <div class="panel">
+
+    <h2>Manage Products</h2>
+
+    <form id="productForm">
+
+      <input type="hidden" id="productId">
+
+      <label>Product Name</label>
+      <input
+        type="text"
+        id="productName"
+        maxlength="80"
+        required
+        placeholder="Example: Brown Eggs"
+      >
+
+      <label>Category</label>
+      <select id="productCategory" required>
+        <option value="Eggs">Eggs</option>
+        <option value="Live Chicken">Live Chicken</option>
+        <option value="Dressed Chicken">Dressed Chicken</option>
+      </select>
+
+      <label>Price (₹)</label>
+      <input
+        type="number"
+        id="productPrice"
+        min="0.01"
+        step="0.01"
+        required
+        placeholder="Enter price"
+      >
+
+      <label>Unit</label>
+      <input
+        type="text"
+        id="productUnit"
+        maxlength="20"
+        required
+        placeholder="Example: piece, dozen, kg, bird"
+      >
+
+      <label>Available Stock</label>
+      <input
+        type="number"
+        id="productStock"
+        min="0"
+        step="1"
+        required
+        placeholder="Available quantity"
+      >
+
+      <label>Product Image URL (Optional)</label>
+      <input
+        type="url"
+        id="productImage"
+        placeholder="Paste image URL"
+      >
+
+      <label>Description</label>
+      <textarea
+        id="productDescription"
+        maxlength="500"
+        placeholder="Product description"
+      ></textarea>
+
+      <label>
+        <input
+          type="checkbox"
+          id="productActive"
+          checked
+          style="width:auto"
+        >
+        Show product in shop
+      </label>
+
+      <br><br>
+
+      <button type="submit" id="saveProductButton" class="primary">
+        Add Product
+      </button>
+
+      <button type="button" id="cancelEditButton" class="secondary hidden">
+        Cancel Edit
+      </button>
+
+      <p id="productMessage"></p>
+
+    </form>
+
+  </div>
+
+
+  <div class="panel">
+
+    <h2>All Products</h2>
+    <div id="adminProductList"></div>
+
+  </div>
+
+
+  <!-- ORDER MANAGEMENT -->
+  <div class="panel">
+
+    <h2>Customer Orders</h2>
+
+    <button id="refreshOrdersButton" class="secondary">
+      Refresh Orders
+    </button>
+
+    <div id="ordersList" style="margin-top:15px">
+      Loading orders...
+    </div>
+
+  </div>
+
 </section>
 
-<section id="adminDashboard" class="container hidden">
-<h2>Admin Dashboard</h2>
-<p id="adminName"></p>
-<button class="danger" onclick="adminLogout()">Logout</button>
-
-<div class="panel">
-<h2>Add / Edit Product</h2>
-<input type="hidden" id="editProductId">
-<input id="pName" placeholder="Product Name">
-
-<select id="pCategory">
-<option>Eggs</option>
-<option>Live Chicken</option>
-<option>Dressed Chicken</option>
-</select>
-
-<input id="pPrice" type="number" placeholder="Price">
-<input id="pUnit" placeholder="Unit (piece, kg, bird)">
-<input id="pStock" type="number" placeholder="Stock">
-<input id="pImage" placeholder="Product Image URL">
-<textarea id="pDescription" placeholder="Description"></textarea>
-
-<label><input type="checkbox" id="pActive" checked style="width:auto"> Available</label>
-
-<button onclick="saveProduct()">Save Product</button>
-<button onclick="clearProductForm()">Clear</button>
-</div>
-
-<div class="panel">
-<h2>Products</h2>
-<div id="adminProducts"></div>
-</div>
-
-<div class="panel">
-<h2>Customer Orders</h2>
-<div id="adminOrders"></div>
-</div>
-</section>
 
 <footer>
-<h3>PoultryMart 🐔</h3>
-<p>WhatsApp: +91 8149632676</p>
+  <p><strong>PoultryMart</strong></p>
+  <p>Farm Fresh Eggs and Chicken</p>
+  <p>For orders: +91 8149632676</p>
 </footer>
+
+
+<!-- FIREBASE LIBRARIES -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
+
 <script>
+
+// ======================================
+// 1. FIREBASE CONFIGURATION
+// ======================================
+
 const firebaseConfig = {
   apiKey: "AIzaSyDmQQusRmXoN7LP4W17m3834iZxIvAfWeA",
   authDomain: "poultry-mart-3b6c7.firebaseapp.com",
@@ -145,250 +595,418 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+
+// ======================================
+// 2. SETTINGS
+// ======================================
+
 const ADMIN_EMAIL = "timandekunal8@gmail.com";
-const FARMER_WHATSAPP = "918149632676";
+const WHATSAPP_NUMBER = "918149632676";
 
 let products = [];
-let cart = [];
-let currentFilter = "All";
 let isAdmin = false;
+let currentPage = "shop";
 
-function showSection(id) {
-  if (id === "adminDashboard" && !isAdmin) {
-    alert("Please login first");
-    return;
+let cart = {};
+
+try {
+  cart = JSON.parse(localStorage.getItem("poultryMartCart") || "{}");
+  if (!cart || typeof cart !== "object" || Array.isArray(cart)) {
+    cart = {};
   }
-
-  ["shop","cart","adminLogin","adminDashboard"].forEach(s =>
-    document.getElementById(s).classList.add("hidden")
-  );
-
-  document.getElementById(id).classList.remove("hidden");
-
-  if (id === "cart") renderCart();
-  if (id === "adminDashboard") loadAdminData();
-  window.scrollTo(0,0);
+} catch (error) {
+  cart = {};
 }
 
-async function loadProducts() {
-  try {
-    const snapshot = await db.collection("products").get();
 
-    products = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+// ======================================
+// 3. HELPER FUNCTIONS
+// ======================================
 
-    document.getElementById("loading").style.display = "none";
-    renderProducts();
-
-  } catch (error) {
-    document.getElementById("loading").innerText =
-      "Unable to load products. Refresh the page.";
-    console.error(error);
-  }
-}
-
-function filterProducts(category) {
-  currentFilter = category;
-  renderProducts();
-}
-
-function renderProducts() {
-  const list = document.getElementById("productList");
-  list.innerHTML = "";
-
-  const filtered = products.filter(p =>
-    p.active !== false &&
-    (currentFilter === "All" || p.category === currentFilter)
-  );
-
-  if (!filtered.length) {
-    list.innerHTML = "<p>No products available.</p>";
-    return;
-  }
-
-  filtered.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const img = document.createElement("img");
-    img.src = p.imageUrl || "";
-    img.alt = p.name || "Product";
-    img.onerror = () => img.style.display = "none";
-
-    const name = document.createElement("h3");
-    name.textContent = p.name || "";
-
-    const price = document.createElement("p");
-    price.className = "price";
-    price.textContent = "₹" + p.price + " / " + (p.unit || "unit");
-
-    const stock = document.createElement("p");
-    stock.textContent = Number(p.stock) > 0
-      ? "Available: " + p.stock
-      : "Out of stock";
-
-    const btn = document.createElement("button");
-    btn.textContent = "Add to Cart";
-    btn.disabled = !(Number(p.stock) > 0);
-    btn.onclick = () => addToCart(p.id);
-
-    card.append(img,name,price,stock,btn);
-    list.appendChild(card);
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, function(char) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[char];
   });
 }
 
-function addToCart(id) {
-  const p = products.find(x => x.id === id);
+function money(value) {
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 2
+  }).format(Number(value) || 0);
+}
 
-  if (!p || Number(p.stock) <= 0) {
-    alert("Out of stock");
-    return;
-  }
-
-  const existing = cart.find(x => x.id === id);
-
-  if (existing) {
-    if (existing.qty >= Number(p.stock)) {
-      alert("Stock limit reached");
-      return;
-    }
-    existing.qty++;
-  } else {
-    cart.push({
-      id:p.id,
-      name:p.name,
-      price:Number(p.price),
-      unit:p.unit || "unit",
-      qty:1,
-      stock:Number(p.stock)
-    });
-  }
-
+function saveCart() {
+  localStorage.setItem("poultryMartCart", JSON.stringify(cart));
   updateCartCount();
-  alert("Added to cart!");
 }
 
 function updateCartCount() {
-  document.getElementById("cartCount").innerText =
-    cart.reduce((sum,x) => sum + x.qty,0);
-} function renderCart() {
-  const box = document.getElementById("cartItems");
-  box.innerHTML = "";
+  const count = Object.values(cart).reduce(function(sum, item) {
+    return sum + (Number(item.qty) || 0);
+  }, 0);
 
-  let total = 0;
+  document.getElementById("cartCount").textContent = count;
+}
 
-  if (cart.length === 0) {
-    box.innerHTML = "<p>Your cart is empty.</p>";
+
+// ======================================
+// 4. PAGE NAVIGATION
+// ======================================
+
+function showPage(page) {
+
+  currentPage = page;
+
+  document.getElementById("shopPage").classList.add("hidden");
+  document.getElementById("cartPage").classList.add("hidden");
+  document.getElementById("adminLoginPage").classList.add("hidden");
+  document.getElementById("adminDashboardPage").classList.add("hidden");
+
+  if (page === "shop") {
+    document.getElementById("shopPage").classList.remove("hidden");
   }
 
-  cart.forEach((item,index) => {
-    total += item.price * item.qty;
+  if (page === "cart") {
+    document.getElementById("cartPage").classList.remove("hidden");
+    renderCart();
+  }
 
-    const row = document.createElement("div");
-    row.className = "panel";
+  if (page === "admin") {
 
-    const info = document.createElement("span");
-    info.textContent =
-      item.name + " × " + item.qty +
-      " = ₹" + (item.price * item.qty);
+    if (isAdmin) {
+      document.getElementById("adminDashboardPage").classList.remove("hidden");
+      loadAdminData();
+    } else {
+      document.getElementById("adminLoginPage").classList.remove("hidden");
+    }
 
-    const minus = document.createElement("button");
-    minus.textContent = "-";
-    minus.onclick = () => changeQty(index,-1);
+  }
 
-    const plus = document.createElement("button");
-    plus.textContent = "+";
-    plus.onclick = () => changeQty(index,1);
+  window.scrollTo(0, 0);
+}
 
-    const remove = document.createElement("button");
-    remove.textContent = "Remove";
-    remove.className = "danger";
-    remove.onclick = () => {
-      cart.splice(index,1);
-      updateCartCount();
-      renderCart();
-    };
+document.querySelectorAll("[data-page]").forEach(function(button) {
 
-    row.append(info,minus,plus,remove);
-    box.appendChild(row);
+  button.addEventListener("click", function() {
+    showPage(button.dataset.page);
   });
 
-  document.getElementById("cartTotal").innerText = total;
-}
+});
 
-function changeQty(index,change) {
-  const item = cart[index];
-  const newQty = item.qty + change;
 
-  if (newQty <= 0) {
-    cart.splice(index,1);
-  } else if (newQty > item.stock) {
-    alert("Available stock: " + item.stock);
-  } else {
-    item.qty = newQty;
-  }
+// ======================================
+// 5. LOAD PRODUCTS FROM FIRESTORE
+// ======================================
 
-  updateCartCount();
+db.collection("products").onSnapshot(function(snapshot) {
+
+  products = snapshot.docs.map(function(doc) {
+    return {
+      id: doc.id,
+      ...doc.data()
+    };
+  });
+
+  products.sort(function(a, b) {
+    return String(a.name || "").localeCompare(String(b.name || ""));
+  });
+
+  renderProducts();
   renderCart();
+  renderAdminProducts();
+
+}, function(error) {
+
+  console.error("Product loading error:", error);
+
+  document.getElementById("productList").innerHTML =
+    '<p class="error">Unable to load products. Please check Firestore rules.</p>';
+
+});
+
+
+// ======================================
+// 6. DISPLAY PRODUCTS
+// ======================================
+
+function renderProducts() {
+
+  const list = document.getElementById("productList");
+
+  const search = document.getElementById("searchInput")
+    .value.toLowerCase().trim();
+
+  const category = document.getElementById("categoryFilter").value;
+
+  const filtered = products.filter(function(product) {
+
+    const name = String(product.name || "").toLowerCase();
+    const description = String(product.description || "").toLowerCase();
+
+    return product.active !== false &&
+      (category === "All" || product.category === category) &&
+      (name.includes(search) || description.includes(search));
+
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML =
+      '<p class="muted">No products available. Please check again later.</p>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(function(product) {
+
+    const stock = Math.max(0, Number(product.stock) || 0);
+    const image = product.image
+      ? `<img class="product-image" src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy">`
+      : `<div class="image-placeholder">🐔</div>`;
+
+    return `
+      <article class="card">
+
+        ${image}
+
+        <h3>${escapeHtml(product.name)}</h3>
+
+        <p class="muted">
+          ${escapeHtml(product.category || "")}
+        </p>
+
+        <p>${escapeHtml(product.description || "")}</p>
+
+        <p class="price">
+          ${money(product.price)} / ${escapeHtml(product.unit || "unit")}
+        </p>
+
+        <p class="muted">
+          Stock: ${stock}
+        </p>
+
+        <button
+          class="primary full"
+          data-add="${escapeHtml(product.id)}"
+          ${stock <= 0 ? "disabled" : ""}
+        >
+          ${stock <= 0 ? "Out of Stock" : "Add to Cart"}
+        </button>
+
+      </article>
+    `;
+
+  }).join("");
+
+  list.querySelectorAll("[data-add]").forEach(function(button) {
+
+    button.addEventListener("click", function() {
+      addToCart(button.dataset.add);
+    });
+
+  });
+
 }
 
-async function placeOrder() {
-  if (cart.length === 0) {
-    alert("Your cart is empty.");
+document.getElementById("searchInput").addEventListener("input", renderProducts);
+document.getElementById("categoryFilter").addEventListener("change", renderProducts);
+
+
+// ======================================
+// 7. ADD TO CART
+// ======================================
+
+function addToCart(productId) {
+
+  const product = products.find(function(item) {
+    return item.id === productId;
+  });
+
+  if (!product) return;
+
+  const currentQty = Number(cart[productId]?.qty) || 0;
+  const stock = Number(product.stock) || 0;
+
+  if (currentQty >= stock) {
+    alert("You cannot add more than available stock.");
     return;
   }
 
-  const name = document.getElementById("customerName").value.trim();
+  cart[productId] = {
+    qty: currentQty + 1
+  };
+
+  saveCart();
+  renderCart();
+
+  alert("Product added to cart!");
+}
+
+
+// ======================================
+// 8. DISPLAY CART
+// ======================================
+
+function renderCart() {
+
+  const cartItems = document.getElementById("cartItems");
+  const cartTotal = document.getElementById("cartTotal");
+  const checkoutPanel = document.getElementById("checkoutPanel");
+
+  let total = 0;
+  let rows = [];
+
+  Object.keys(cart).forEach(function(id) {
+
+    const product = products.find(function(item) {
+      return item.id === id;
+    });
+
+    if (!product) {
+      delete cart[id];
+      return;
+    }
+
+    const qty = Math.max(0, Number(cart[id].qty) || 0);
+
+    if (qty <= 0) {
+      delete cart[id];
+      return;
+    }
+
+    const lineTotal = Number(product.price) * qty;
+
+    total += lineTotal;
+
+    rows.push({
+      product: product,
+      qty: qty,
+      lineTotal: lineTotal
+    });
+
+  });
+
+  saveCart();
+
+  if (rows.length === 0) {
+
+    cartItems.innerHTML = "<p>Your cart is empty.</p>";
+    cartTotal.textContent = "";
+    checkoutPanel.classList.add("hidden");
+    return;
+
+  }
+
+  checkoutPanel.classList.remove("hidden");
+
+  cartItems.innerHTML = rows.map(function(row) {
+
+    return `
+      <div class="cart-row">
+
+        <div>
+          <strong>${escapeHtml(row.product.name)}</strong>
+          <br>
+          <span class="muted">
+            ${money(row.product.price)} / ${escapeHtml(row.product.unit || "unit")}
+          </span>
+          <br>
+          <strong>${money(row.lineTotal)}</strong>
+        </div>
+
+        <div class="qty-buttons">
+
+          <button
+            data-change="-1"
+            data-id="${escapeHtml(row.product.id)}"
+          >−</button>
+
+          <strong>${row.qty}</strong>
+
+          <button
+            data-change="1"
+            data-id="${escapeHtml(row.product.id)}"
+          >+</button>
+
+          <button
+            class="danger"
+            data-remove="${escapeHtml(row.product.id)}"
+          >Remove</button>
+
+        </div>
+
+      </div>
+    `;
+
+  }).join("");
+
+  cartTotal.textContent = "Total: " + money(total);
+
+}
+
+document.getElementById("cartItems").addEventListener("click", function(event) {
+
+  const changeButton = event.target.closest("[data-change]");
+  const removeButton = event.target.closest("[data-remove]");
+
+  if (removeButton) {
+
+    delete cart[removeButton.dataset.remove];
+
+    saveCart();
+    renderCart();
+    return;
+
+  }
+
+  if (changeButton) {
+
+    const id = changeButton.dataset.id;
+    const change = Number(changeButton.dataset.change);
+
+    const product = products.find(function(item) {
+      return item.id === id;
+    });
+
+    if (!product || !cart[id]) return;
+
+    const newQty = Number(cart[id].qty) + change;
+    const stock = Number(product.stock) || 0;
+
+    if (newQty <= 0) {
+      delete cart[id];
+    } else if (newQty <= stock) {
+      cart[id].qty = newQty;
+    } else {
+      alert("Available stock is " + stock);
+    }
+
+    saveCart();
+    renderCart();
+
+  }
+
+});
+
+
+// ======================================
+// 9. CUSTOMER CHECKOUT
+// ======================================
+
+document.getElementById("checkoutForm").addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  const button = document.getElementById("placeOrderButton");
+  const result = document.getElementById("orderResult");
+
+  const customerName = document.getElementById("customerName").value.trim();
   const phone = document.getElementById("customerPhone").value.trim();
-  const delivery = document.getElementById("deliveryMode").value;
-  const address = document.getElementById("customerAddress").value.trim();
-  const payment = document.getElementById("paymentMode").value;
-
-  if (!name || !/^[0-9]{10}$/.test(phone)) {
-    alert("Enter your name and valid 10-digit phone number.");
-    return;
-  }
-
-  if (delivery === "Home Delivery" && !address) {
-    alert("Enter your delivery address.");
-    return;
-  }
-
-  try {
-    const items = [];
-
-    for (const item of cart) {
-      const doc = await db.collection("products").doc(item.id).get();
-
-      if (!doc.exists) throw new Error(item.name + " is unavailable.");
-
-      const product = doc.data();
-
-      if (product
-      // SAVE PRODUCT
-
-async function saveProduct() {
-  if (!isAdmin) {
-    alert("Admin login required.");
-    return;
-  }
-
-  const name = document.getElementById("pName").value.trim();
-  const category = document.getElementById("pCategory").value;
-  const price = Number(document.getElementById("pPrice").value);
-  const unit = document.getElementById("pUnit").value.trim();
-  const stock = Number(document.getElementById("pStock").value);
-  const imageUrl = document.getElementById("pImage").value.trim();
-  const description = document.getElementById("pDescription").value.trim();
-  const active = document.getElementById("pActive").checked;
-  const id = document.getElementById("editProductId").value;
-
-  if (!name || !unit || !Number.isFinite(price) || price <= 0 ||
-      !Number.isInteger(stock) || stock < 0) {
-    alert("Please enter valid product details.");
-    return;
-  }
-
-  if (imageUrl && !/^https?:\/\//i    
+  const deliveryType = document.getElementById("deliveryType").value;
+  const address = document.getElementById("customerAddress").value.trim
