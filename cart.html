@@ -341,43 +341,16 @@ footer {
 
     <h3>Customer Details</h3>
 
-    <form id="checkoutForm">
+    <div class="checkout-box">
+  <h3>Ready to order?</h3>
+  <p>Review your cart and continue to enter your delivery details.</p>
 
-      <label>Full Name</label>
-      <input id="customerName" required placeholder="Enter your name">
-
-      <label>Mobile Number</label>
-      <input
-        id="customerPhone"
-        type="tel"
-        pattern="[0-9]{10}"
-        maxlength="10"
-        required
-        placeholder="10 digit mobile number"
-      >
-
-      <label>Delivery Type</label>
-      <select id="deliveryType" required>
-        <option value="Pickup">Farm Pickup</option>
-        <option value="Home Delivery">Home Delivery</option>
-      </select>
-
-      <label>Delivery Address</label>
-      <textarea
-        id="customerAddress"
-        rows="3"
-        placeholder="Enter delivery address if required"
-      ></textarea>
-
-      <button
-        type="submit"
-        class="primary"
-        id="placeOrderButton"
-      >
-        Place Order
-      </button>
-
-    </form>
+  <a href="checkout.html">
+    <button type="button" class="primary">
+      Proceed to Checkout →
+    </button>
+  </a>
+    </div>
 
     <div id="orderResult"></div>
 
