@@ -1,1 +1,297 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoultryMart | Checkout</title><style>
+* { box-sizing: border-box; }
 
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7f5;
+  color: #222;
+}
+
+header {
+  background: #176b3a;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.container {
+  max-width: 600px;
+  margin: 25px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 13px;
+  margin: 9px 0 16px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #176b3a;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+}
+
+a { color: #176b3a; }
+
+.product {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.message {
+  background: #e8f5e9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.error {
+  background: #ffebee;
+}
+
+.total {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 20px 0;
+}
+</style></head><body><header>
+  <h1>PoultryMart</h1>
+  <p>Secure Customer Checkout</p>
+</header><div class="container">  <h2>Order Summary</h2>
+  <div id="orderItems">Loading cart...</div>
+  <div class="total" id="orderTotal">Total: ₹0</div>  <h2>Customer Details</h2>  <form id="checkoutForm"><label>Full Name</label>
+<input type="text" id="customerName" required>
+
+<label>Mobile Number</label>
+<input type="tel" id="customerPhone" maxlength="10" required>
+
+<label>Delivery Type</label>
+<select id="deliveryType" required>
+  <option value="Home Delivery">Home Delivery</option>
+  <option value="Pickup">Farm Pickup</option>
+</select>
+
+<label>Delivery Address</label>
+<textarea id="customerAddress" rows="3"></textarea>
+
+<button type="submit" id="placeOrderButton">
+  Place Order
+</button>
+
+  </form>  <div id="orderResult"></div>  <p><a href="cart.html">← Back to Cart</a></p></div><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script>
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDmQQusRmXoN7LP4W17m3834iZxIvAfWeA",
+  authDomain: "poultry-mart-3b6c7.firebaseapp.com",
+  projectId: "poultry-mart-3b6c7",
+  storageBucket: "poultry-mart-3b6c7.firebasestorage.app",
+  messagingSenderId: "917433171766",
+  appId: "1:917433171766:web:17283e7fe1893748cb3d97",
+  measurementId: "G-QYHCTZ1J5Z"
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const db = firebase.firestore();
+
+const WHATSAPP_NUMBER = "918149632676";
+
+let cart = [];
+
+try {
+  cart = JSON.parse(localStorage.getItem("poultryCart")) || [];
+  if (!Array.isArray(cart)) cart = [];
+} catch (error) {
+  cart = [];
+}
+
+function money(value) {
+  return Number(value).toFixed(2);
+}
+
+function calculateTotal() {
+  return cart.reduce(function(total, item) {
+    return total + Number(item.price) * Number(item.quantity);
+  }, 0);
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, function(character) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[character];
+  });
+}
+
+function renderOrder() {
+
+  const list = document.getElementById("orderItems");
+
+  if (cart.length === 0) {
+    list.textContent = "Your cart is empty.";
+    document.getElementById("orderTotal").textContent = "Total: ₹0";
+    document.getElementById("placeOrderButton").disabled = true;
+    return;
+  }
+
+  list.innerHTML = "";
+
+  cart.forEach(function(item) {
+
+    const row = document.createElement("div");
+    row.className = "product";
+
+    row.textContent =
+      item.name + " × " + item.quantity +
+      " = ₹" + money(Number(item.price) * Number(item.quantity));
+
+    list.appendChild(row);
+
+  });
+
+  document.getElementById("orderTotal").textContent =
+    "Total: ₹" + money(calculateTotal());
+
+}
+
+renderOrder();
+
+document.getElementById("deliveryType").addEventListener("change", function() {
+  const address = document.getElementById("customerAddress");
+  address.required = this.value === "Home Delivery";
+});
+
+document.getElementById("checkoutForm").addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  if (cart.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  const button = document.getElementById("placeOrderButton");
+  const result = document.getElementById("orderResult");
+
+  const customerName = document.getElementById("customerName").value.trim();
+  const phone = document.getElementById("customerPhone").value.trim();
+  const deliveryType = document.getElementById("deliveryType").value;
+  const address = document.getElementById("customerAddress").value.trim();
+
+  if (!/^[0-9]{10}$/.test(phone)) {
+    alert("Please enter a valid 10 digit mobile number.");
+    return;
+  }
+
+  if (deliveryType === "Home Delivery" && !address) {
+    alert("Please enter your delivery address.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Placing Order...";
+
+  try {
+
+    const orderItems = cart.map(function(item) {
+      return {
+        productId: item.id,
+        name: item.name,
+        price: Number(item.price),
+        unit: item.unit,
+        quantity: Number(item.quantity)
+      };
+    });
+
+    const total = calculateTotal();
+
+    const orderData = {
+      customerName: customerName,
+      phone: phone,
+      deliveryType: deliveryType,
+      address: address,
+      items: orderItems,
+      total: total,
+      status: "Pending",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    const orderRef = await db.collection("orders").add(orderData);
+
+    let message = "Hello PoultryMart! I have placed an order.%0A%0A";
+
+    message += "Order ID: " + orderRef.id + "%0A";
+    message += "Name: " + encodeURIComponent(customerName) + "%0A";
+    message += "Phone: " + phone + "%0A";
+    message += "Delivery: " + encodeURIComponent(deliveryType) + "%0A";
+
+    orderItems.forEach(function(item) {
+      message += encodeURIComponent(item.name) +
+        " x " + item.quantity +
+        " = Rs. " + (item.price * item.quantity) + "%0A";
+    });
+
+    message += "%0ATotal: Rs. " + total;
+
+    cart = [];
+    localStorage.setItem("poultryCart", JSON.stringify(cart));
+
+    renderOrder();
+    document.getElementById("checkoutForm").reset();
+
+    result.innerHTML = `
+      <div class="message">
+        <h3>Order placed successfully!</h3>
+        <p>Your Order ID: ${escapeHTML(orderRef.id)}</p>
+        <p>Total: ₹${money(total)}</p>
+        <p>Please contact us on WhatsApp to confirm your order.</p>
+        <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${message}"
+           target="_blank" rel="noopener">
+          <button type="button">Confirm on WhatsApp</button>
+        </a>
+      </div>
+    `;
+
+  } catch (error) {
+
+    console.error(error);
+    result.textContent = "Order failed: " + error.message;
+    result.className = "message error";
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "Place Order";
+
+  }
+
+});
+
+</script></body>
+  </html>
