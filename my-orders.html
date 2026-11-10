@@ -1,46 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Orders - PoultryMart</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Orders - PoultryMart</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f7f2;
-      margin: 0;
-      padding: 20px;
-    }
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f6f0;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 650px;
+  margin: auto;
+}
+h1 {
+  text-align: center;
+  color: #267a35;
+}
+.order {
+  background: white;
+  padding: 18px;
+  margin: 15px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #ddd;
+}
+.status {
+  font-weight: bold;
+  color: #267a35;
+}
+button {
+  background: #267a35;
+  color: white;
+  border: 0;
+  padding: 12px 18px;
+  border-radius: 6px;
+  margin: 5px;
+}
+</style>
+</head>
 
-    .container {
-      max-width: 700px;
-      margin: auto;
-    }
+<body>
+<div class="container">
 
-    h1 {
-      color: #267a35;
-      text-align: center;
-    }
+<h1>🐔 My PoultryMart Orders</h1>
 
-    .order {
-      background: white;
-      padding: 18px;
-      margin: 15px 0;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px #ddd;
-    }
+<p id="message">Checking login...</p>
+<div id="orders"></div>
 
-    .status {
-      display: inline-block;
-      background: #fff0c2;
-      padding: 7px 12px;
-      border-radius: 20px;
-      font-weight: bold;
-    }
+<button onclick="location.href='index.html'">
+Back to Home
+</button>
 
-    button {
-      background: #267a35;
-      color: white;
-      border: none;
-      padding: 12px
+<button onclick="logout()">
+Logout
+</button>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDmQQusRmXoN7LP4W17m3834iZxIvAfWeA",
+  authDomain: "poultry-mart-3b6c7.firebase
