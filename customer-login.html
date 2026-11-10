@@ -1,1 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoultryMart | Customer Login</title>
 
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f7f4;
+  color: #222;
+}
+
+header {
+  background: #176b3a;
+  color: white;
+  text-align: center;
+  padding: 22px;
+}
+
+.container {
+  max-width: 420px;
+  background: white;
+  margin: 40px auto;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 15px #ddd;
+}
+
+h2 { text-align: center; }
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 12px 0;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #176b3a;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  font-size: 16px;
+  margin-top: 12px;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+#otpSection {
+  display: none;
+}
+
+#message {
+  margin-top: 15px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.back {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #176b3a;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>PoultryMart</h1>
+  <p>Customer Account</p>
+</header>
+
+<div class="container">
+
+  <h2>Login / Sign Up</h2>
+
+  <p>Enter your mobile number to receive an OTP.</p>
+
+  <label>Mobile Number</label>
+
+  <input
+    type="tel"
+    id="phone"
+    maxlength="10"
+    placeholder="Enter 10 digit mobile number"
+  >
+
+  <button id="sendOtpButton" onclick="sendOTP()">
+    Send OTP
+  </button>
+
+  <div id="recaptcha-container"></div>
+
+  <div id="otpSection">
+
+    <label>Enter OTP</label>
+
+    <input
+      type="text"
+      id="otp"
+      maxlength="6"
+      placeholder="Enter 6 digit OTP"
+    >
+
+    <button id="verifyButton" onclick="verifyOTP()">
+      Verify OTP
+    </button>
+
+  </div>
+
+  <div id="message"></div>
+
+  <a class="back" href="index.html">
+    Back to Home
+  </a>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDmQQusRmXoN7LP4W17m3834iZxIvAfWeA",
+  authDomain: "poultry-mart-3b6c7.firebaseapp.com",
+  projectId: "poultry-mart-3b6c7",
+  storageBucket: "poultry-mart-3b6c7.firebasestorage.app",
+  messagingSenderId: "917433171766",
+  appId: "1:917433171766:web:17283e7fe1893748cb3d97",
+  measurementId: "G-QYHCTZ1J5Z"
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const auth = firebase.auth();
+
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+let confirmationResult = null;
+let recaptchaVerifier = null;
+
+function showMessage(text, error = false) {
+  const message = document.getElementById("message");
+  message.textContent = text;
+  message.style.color = error ? "red" : "green";
+}
+
+function setupRecaptcha() {
+
+  if (recaptchaVerifier) return;
+
+  recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+    "recaptcha-container",
+    {
+      size: "normal"
+    }
+  );
+
+  recaptchaVerifier.render();
+
+}
+
+async function sendOTP() {
+
+  const phone = document.getElementById("phone").value.trim();
+
+  if (!/^[0-9]{10}$/.test(phone)) {
+    showMessage("Enter a valid 10 digit mobile number.", true);
+    return;
+  }
+
+  const button = document.getElementById("sendOtpButton");
+
+  button.disabled = true;
+
+  try {
+
+    setupRecaptcha();
+
+    await recaptchaVerifier.render();
+
+    confirmationResult = await auth.signInWithPhoneNumber(
+      "+91" + phone,
+      recaptchaVerifier
+    );
+
+    document.getElementById("otpSection").style.display = "block";
+
+    showMessage("OTP sent successfully. Check your SMS.");
+
+  } catch (error) {
+
+    console.error(error);
+
+    showMessage(error.message, true);
+
+    if (recaptchaVerifier) {
+      recaptchaVerifier.clear();
+      recaptchaVerifier = null;
+    }
+
+  } finally {
+
+    button.disabled = false;
+
+  }
+
+}
+
+async function verifyOTP() {
+
+  const otp = document.getElementById("otp").value.trim();
+
+  if (!/^[0-9]{6}$/.test(otp)) {
+    showMessage("Enter a valid 6 digit OTP.", true);
+    return;
+  }
+
+  const button = document.getElementById("verifyButton");
+
+  button.disabled = true;
+
+  try {
+
+    const result = await confirmationResult.confirm(otp);
+
+    showMessage("Login successful! Welcome to PoultryMart.");
+
+    setTimeout(function() {
+      window.location.href = "index.html";
+    }, 1500);
+
+  } catch (error) {
+
+    console.error(error);
+
+    showMessage("OTP verification failed: " + error.message, true);
+
+  } finally {
+
+    button.disabled = false;
+
+  }
+
+}
+
+auth.onAuthStateChanged(function(user) {
+
+  if (user) {
+    console.log("Customer authenticated:", user.uid);
+  }
+
+});
+
+</script>
+
+</body>
+</html>
