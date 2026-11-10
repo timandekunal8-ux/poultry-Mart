@@ -897,47 +897,6 @@ function renderCart() {
 }
 
 
-// ======================================
-// 7. CUSTOMER CHECKOUT
-// ======================================
-
-document.getElementById("checkoutForm").addEventListener("submit", async function(event) {
-
-  event.preventDefault();
-
-  if (cart.length === 0) {
-    alert("Your cart is empty.");
-    return;
-  }
-
-  const button = document.getElementById("placeOrderButton");
-
-  const result = document.getElementById("orderResult");
-
-  const customerName =
-    document.getElementById("customerName").value.trim();
-
-  const phone =
-    document.getElementById("customerPhone").value.trim();
-
-  const deliveryType =
-    document.getElementById("deliveryType").value;
-
-  const address =
-    document.getElementById("customerAddress").value.trim();
-
-  if (!/^[0-9]{10}$/.test(phone)) {
-    alert("Please enter a valid 10 digit mobile number.");
-    return;
-  }
-
-  if (deliveryType === "Home Delivery" && !address) {
-    alert("Please enter your delivery address.");
-    return;
-  }
-
-  button.disabled = true;
-  button.textContent = "Placing Order...";
 
   try {
 
@@ -1012,26 +971,6 @@ document.getElementById("checkoutForm").addEventListener("submit", async functio
           </button>
         </a>
       </div>
-    `;
-
-  } catch (error) {
-
-    console.error(error);
-
-    result.textContent =
-      "Order failed: " + error.message;
-
-    result.className = "message error";
-
-  } finally {
-
-    button.disabled = false;
-    button.textContent = "Place Order";
-
-  }
-
-});
-
 
 // ======================================
 // 8. ADMIN LOGIN
