@@ -898,79 +898,8 @@ function renderCart() {
 
 
 
-  try {
+  
 
-    const orderItems = cart.map(function(item) {
-
-      return {
-        productId: item.id,
-        name: item.name,
-        price: Number(item.price),
-        unit: item.unit,
-        quantity: Number(item.quantity)
-      };
-
-    });
-
-    const total = calculateTotal();
-
-    const orderData = {
-      customerName: customerName,
-      phone: phone,
-      deliveryType: deliveryType,
-      address: address,
-      items: orderItems,
-      total: total,
-      status: "Pending",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-
-    const orderRef = await db.collection("orders").add(orderData);
-
-    let message =
-      "Hello PoultryMart! I have placed an order.%0A%0A";
-
-    message += "Order ID: " + orderRef.id + "%0A";
-    message += "Name: " + encodeURIComponent(customerName) + "%0A";
-    message += "Phone: " + phone + "%0A";
-    message += "Delivery: " + encodeURIComponent(deliveryType) + "%0A";
-
-    orderItems.forEach(function(item) {
-
-      message +=
-        encodeURIComponent(item.name) +
-        " x " + item.quantity +
-        " = Rs. " + (item.price * item.quantity) +
-        "%0A";
-
-    });
-
-    message += "%0ATotal: Rs. " + total;
-
-    cart = [];
-
-    saveCart();
-    renderCart();
-
-    document.getElementById("checkoutForm").reset();
-
-    result.innerHTML = `
-      <div class="message">
-        <h3>Order placed successfully!</h3>
-        <p>Your Order ID: ${escapeHTML(orderRef.id)}</p>
-        <p>Total: ₹${money(total)}</p>
-        <p>Please contact us on WhatsApp to confirm your order.</p>
-        <br>
-        <a
-          href="https://wa.me/${WHATSAPP_NUMBER}?text=${message}"
-          target="_blank"
-          rel="noopener"
-        >
-          <button type="button" class="primary">
-            Confirm on WhatsApp
-          </button>
-        </a>
-      </div>
 
 // ======================================
 // 8. ADMIN LOGIN
