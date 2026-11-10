@@ -149,7 +149,9 @@ if (!firebase.apps.length) {
 
 const auth = firebase.auth();
 
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  const persistenceReady = auth.setPersistence(
+  firebase.auth.Auth.Persistence.LOCAL
+);
 
 let confirmationResult = null;
 let recaptchaVerifier = null;
@@ -189,7 +191,7 @@ async function sendOTP() {
   button.disabled = true;
 
   try {
-
+await persistenceReady;
     setupRecaptcha();
 
     await recaptchaVerifier.render();
