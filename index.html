@@ -1032,37 +1032,6 @@ document.getElementById("adminLoginForm").addEventListener("submit", async funct
   }
 
 });
-
-
-// ======================================
-// 9. AUTHENTICATION CHECK
-// ======================================
-
-auth.onAuthStateChanged(function(user) {
-
-  isAdmin = !!(
-    user &&
-    user.email &&
-    user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
-  );
-
-  if (user && !isAdmin) {
-
-    auth.signOut();
-
-    alert("Unauthorized account.");
-
-    return;
-
-  }
-
-  if (currentPage === "admin") {
-    showPage("admin");
-  }
-
-});
-
-
 // ======================================
 // 10. ADMIN LOGOUT
 // ======================================
