@@ -233,7 +233,7 @@ document.getElementById("checkoutForm").addEventListener("submit", async functio
     });
 
     const total = calculateTotal();
-console.log("Logged-in customer:", firebase.auth().currentUser);
+alert("Customer UID: " + (firebase.auth().currentUser ? firebase.auth().currentUser.uid : "NOT LOGGED IN"));
     const orderData = {
   customerName: customerName,
   phone: phone,
