@@ -68,3 +68,79 @@ Logout
 const firebaseConfig = {
   apiKey: "AIzaSyDmQQusRmXoN7LP4W17m3834iZxIvAfWeA",
   authDomain: "poultry-mart-3b6c7.firebase
+app.com",
+  projectId: "poultry-mart-3b6c7",
+  storageBucket: "poultry-mart-3b6c7.firebasestorage.app",
+  messagingSenderId: "917433171766",
+  appId: "1:917433171766:web:17283e7fe1893748cb3d97",
+  measurementId: "G-QYHCTZ1J5Z"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+auth.onAuthStateChanged(async function(user) {
+  const message = document.getElementById("message");
+  const ordersDiv = document.getElementById("orders");
+
+  if (!user) {
+    message.textContent = "Please login first.";
+    return;
+  }
+
+  message.textContent = "Loading your orders...";
+
+  try {
+    const snapshot = await db.collection("orders")
+      .where("customerUid", "==", user.uid)
+      .get();
+
+    if (snapshot.empty) {
+      message.textContent = "No orders found for this account.";
+      return;
+    }
+
+    message.textContent = "Your Orders";
+
+    snapshot.forEach(function(doc) {
+      const order = doc.data();
+      const card = document.createElement("div");
+      card.className = "order";
+
+      const title = document.createElement("h3");
+      title.textContent = "Order ID: " + doc.id;
+
+      const products = document.createElement("p");
+      products.textContent = "Items: " +
+        (order.items || []).map(function(item) {
+          return (item.name || "Product") +
+            " x " + (item.quantity || 1);
+        }).join(", ");
+
+      const total = document.createElement("p");
+      total.textContent = "Total: ₹" + order.total;
+
+      const status = document.createElement("p");
+      status.className = "status";
+      status.textContent = "Status: " + order.status;
+
+      card.append(title, products, total, status);
+      ordersDiv.appendChild(card);
+    });
+
+  } catch (error) {
+    message.textContent = "Error: " + error.message;
+  }
+});
+
+function logout() {
+  auth.signOut().then(function() {
+    location.href = "customer-login.html";
+  });
+}
+</script>
+
+</body>
+</html>
