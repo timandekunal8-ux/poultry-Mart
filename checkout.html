@@ -116,7 +116,11 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
+const auth = firebase.auth();
 
+const persistenceReady = auth.setPersistence(
+  firebase.auth.Auth.Persistence.LOCAL
+);
 const db = firebase.firestore();
 
 const WHATSAPP_NUMBER = "918149632676";
@@ -234,8 +238,13 @@ document.getElementById("checkoutForm").addEventListener("submit", async functio
 
     const total = calculateTotal();
 
+await persistenceReady;
+
 const user = await new Promise(resolve => {
-  firebase.auth().onAuthStateChanged(resolve);
+  const unsubscribe = auth.onAuthStateChanged(currentUser => {
+    unsubscribe();
+    resolve(currentUser);
+  });
 });
 
 if (!user) {
