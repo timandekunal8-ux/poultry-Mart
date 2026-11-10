@@ -233,8 +233,18 @@ document.getElementById("checkoutForm").addEventListener("submit", async functio
     });
 
     const total = calculateTotal();
-alert("Customer UID: " + (firebase.auth().currentUser ? firebase.auth().currentUser.uid : "NOT LOGGED IN"));
-    const orderData = {
+
+const user = await new Promise(resolve => {
+  firebase.auth().onAuthStateChanged(resolve);
+});
+
+if (!user) {
+  alert("Please login before placing your order.");
+  window.location.href = "customer-login.html";
+  return;
+}
+
+const orderData = {
   customerName: customerName,
   phone: phone,
   deliveryType: deliveryType,
@@ -242,9 +252,7 @@ alert("Customer UID: " + (firebase.auth().currentUser ? firebase.auth().currentU
   items: orderItems,
   total: total,
   status: "Pending",
-  customerUid: firebase.auth().currentUser
-    ? firebase.auth().currentUser.uid
-    : null,
+  customerUid: user.uid,
   createdAt: firebase.firestore.FieldValue.serverTimestamp()
 };
     const orderRef = await db.collection("orders").add(orderData);
