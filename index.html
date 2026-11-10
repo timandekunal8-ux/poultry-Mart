@@ -594,15 +594,19 @@ function money(value) {
 // ======================================
 // 3. PAGE NAVIGATION
 // ======================================
-
 function showPage(page) {
 
   currentPage = page;
 
+  document.getElementById("homePage").classList.add("hidden");
   document.getElementById("shopPage").classList.add("hidden");
   document.getElementById("cartPage").classList.add("hidden");
   document.getElementById("adminLoginPage").classList.add("hidden");
   document.getElementById("adminDashboardPage").classList.add("hidden");
+
+  if (page === "home") {
+    document.getElementById("homePage").classList.remove("hidden");
+  }
 
   if (page === "shop") {
     document.getElementById("shopPage").classList.remove("hidden");
@@ -634,6 +638,7 @@ document.querySelectorAll("[data-page]").forEach(function(button) {
   });
 
 });
+
 
 
 // ======================================
@@ -1448,7 +1453,7 @@ updateCartCount();
 
 renderCart();
 
-showPage("shop");
+showPage("home");
 
 loadProducts();
 
