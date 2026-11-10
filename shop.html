@@ -1023,4 +1023,441 @@ document.getElementById("checkoutForm").addEventListener("submit", async functio
     result.innerHTML = `
       <div class="message">
         <h3>Order placed successfully!</h3>
-        <p>Your Order ID: ${
+                <p>Your Order ID: ${escapeHTML(orderRef.id)}</p>
+        <p>Total: ₹${money(total)}</p>
+        <p>Please contact us on WhatsApp to confirm your order.</p>
+        <br>
+        <a
+          href="https://wa.me/${WHATSAPP_NUMBER}?text=${message}"
+          target="_blank"
+          rel="noopener"
+        >
+          <button type="button" class="primary">
+            Confirm on WhatsApp
+          </button>
+        </a>
+      </div>
+    `;
+
+  } catch (error) {
+
+    console.error(error);
+
+    result.textContent =
+      "Order failed: " + error.message;
+
+    result.className = "message error";
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "Place Order";
+
+  }
+
+});
+
+
+// ======================================
+// 8. ADMIN LOGIN
+// ======================================
+
+document.getElementById("adminLoginForm").addEventListener("submit", async function(event) {
+
+event.preventDefault();
+
+const email = document.getElementById("adminEmail").value.trim();
+const password = document.getElementById("adminPassword").value;
+
+if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+showMessage("loginMessage", "This email is not authorized.", true);
+return;
+}
+
+try {
+const result = await auth.signInWithEmailAndPassword(email, password);
+
+if (result.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+  isAdmin = true;
+  showPage("admin");
+  showMessage("loginMessage", "Login successful!");
+}
+
+} catch (error) {
+showMessage("loginMessage", error.message, true);
+}
+
+});
+// ======================================
+// 10. ADMIN LOGOUT
+// ======================================
+
+document.getElementById("logoutButton").addEventListener("click", async function() {
+
+  try {
+
+    await auth.signOut();
+
+    isAdmin = false;
+
+    showPage("shop");
+
+  } catch (error) {
+
+    alert(error.message);
+
+  }
+
+});
+
+
+// ======================================
+// 11. ADD PRODUCT
+// ======================================
+
+document.getElementById("productForm").addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  if (!isAdmin) {
+    alert("Admin login required.");
+    return;
+  }
+
+  const name =
+    document.getElementById("productName").value.trim();
+
+  const category =
+    document.getElementById("productCategory").value;
+
+  const price =
+    Number(document.getElementById("productPrice").value);
+
+  const unit =
+    document.getElementById("productUnit").value.trim();
+
+  const image =
+    document.getElementById("productImage").value.trim();
+
+  const description =
+    document.getElementById("productDescription").value.trim();
+
+  if (!name || !unit || !Number.isFinite(price) || price <= 0) {
+
+    showMessage("productMessage", "Please enter valid product details.", true);
+
+    return;
+
+  }
+
+  if (image && !safeImageURL(image)) {
+
+    showMessage("productMessage", "Please enter a valid HTTP or HTTPS image URL.", true);
+
+    return;
+
+  }
+
+  try {
+
+    await db.collection("products").add({
+
+      name: name,
+      category: category,
+      price: price,
+      unit: unit,
+      image: image,
+      description: description,
+      active: true,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+    });
+
+    document.getElementById("productForm").reset();
+
+    showMessage("productMessage", "Product added successfully!");
+
+    await loadProducts();
+
+    await loadAdminProducts();
+
+  } catch (error) {
+
+    showMessage("productMessage", error.message, true);
+
+  }
+
+});
+
+
+// ======================================
+// 12. ADMIN PRODUCT MANAGEMENT
+// ======================================
+
+async function loadAdminProducts() {
+
+  const list = document.getElementById("adminProductList");
+
+  list.textContent = "Loading products...";
+
+  if (!isAdmin) return;
+
+  try {
+
+    const snapshot = await db.collection("products").get();
+
+    if (snapshot.empty) {
+
+      list.textContent = "No products added yet.";
+
+      return;
+
+    }
+
+    list.innerHTML = "";
+
+    snapshot.forEach(function(doc) {
+
+      const product = doc.data();
+
+      const box = document.createElement("div");
+
+      box.className = "order-item";
+
+      const title = document.createElement("h3");
+      title.textContent = product.name || "Unnamed product";
+
+      const details = document.createElement("p");
+      details.textContent =
+        "Category: " + (product.category || "") +
+        " | Price: ₹" + money(product.price) +
+        " / " + (product.unit || "");
+
+      const deleteButton = document.createElement("button");
+
+      deleteButton.className = "danger";
+      deleteButton.textContent = "Delete Product";
+
+      deleteButton.addEventListener("click", function() {
+        deleteProduct(doc.id);
+      });
+
+      box.appendChild(title);
+      box.appendChild(details);
+      box.appendChild(deleteButton);
+
+      list.appendChild(box);
+
+    });
+
+  } catch (error) {
+
+    list.textContent = "Error: " + error.message;
+
+  }
+
+}
+
+async function deleteProduct(productId) {
+
+  if (!isAdmin) return;
+
+  if (!confirm("Are you sure you want to delete this product?")) {
+    return;
+  }
+
+  try {
+
+    await db.collection("products").doc(productId).delete();
+
+    alert("Product deleted.");
+
+    await loadProducts();
+
+    await loadAdminProducts();
+
+  } catch (error) {
+
+    alert("Unable to delete product: " + error.message);
+
+  }
+
+}
+
+
+// ======================================
+// 13. ADMIN ORDER MANAGEMENT
+// ======================================
+
+async function loadAdminOrders() {
+
+  const list = document.getElementById("adminOrderList");
+
+  list.textContent = "Loading orders...";
+
+  if (!isAdmin) return;
+
+  try {
+
+    const snapshot = await db.collection("orders")
+      .orderBy("createdAt", "desc")
+      .get();
+
+    if (snapshot.empty) {
+
+      list.textContent = "No customer orders yet.";
+
+      return;
+
+    }
+
+    list.innerHTML = "";
+
+    snapshot.forEach(function(doc) {
+
+      const order = doc.data();
+
+      const box = document.createElement("div");
+
+      box.className = "order-item";
+
+      const title = document.createElement("h3");
+      title.textContent = "Order: " + doc.id;
+
+      const customer = document.createElement("p");
+      customer.textContent =
+        "Customer: " + (order.customerName || "");
+
+      const phone = document.createElement("p");
+      phone.textContent =
+        "Phone: " + (order.phone || "");
+
+      const delivery = document.createElement("p");
+      delivery.textContent =
+        "Delivery: " + (order.deliveryType || "");
+
+      const address = document.createElement("p");
+      address.textContent =
+        "Address: " + (order.address || "Not provided");
+
+      const total = document.createElement("p");
+      total.textContent =
+        "Total: ₹" + money(order.total);
+
+      const status = document.createElement("p");
+      status.className = "status";
+      status.textContent =
+        "Status: " + (order.status || "Pending");
+
+      const items = document.createElement("div");
+
+      const orderProducts = Array.isArray(order.items) ? order.items : [];
+
+      items.textContent = "Items: " + orderProducts.map(function(item) {
+        return (item.name || "Product") + " x " + item.quantity;
+      }).join(", ");
+
+      const select = document.createElement("select");
+
+      ["Pending", "Confirmed", "Processing", "Delivered", "Cancelled"]
+        .forEach(function(value) {
+
+          const option = document.createElement("option");
+
+          option.value = value;
+          option.textContent = value;
+
+          if ((order.status || "Pending") === value) {
+            option.selected = true;
+          }
+
+          select.appendChild(option);
+
+        });
+
+      const updateButton = document.createElement("button");
+
+      updateButton.className = "primary";
+      updateButton.textContent = "Update Status";
+
+      updateButton.addEventListener("click", function() {
+        updateOrderStatus(doc.id, select.value);
+      });
+
+      box.appendChild(title);
+      box.appendChild(customer);
+      box.appendChild(phone);
+      box.appendChild(delivery);
+      box.appendChild(address);
+      box.appendChild(items);
+      box.appendChild(total);
+      box.appendChild(status);
+      box.appendChild(select);
+      box.appendChild(updateButton);
+
+      list.appendChild(box);
+
+    });
+
+  } catch (error) {
+
+    list.textContent = "Unable to load orders: " + error.message;
+
+  }
+
+}
+
+async function updateOrderStatus(orderId, status) {
+
+  if (!isAdmin) return;
+
+  try {
+
+    await db.collection("orders").doc(orderId).update({
+      status: status
+    });
+
+    alert("Order status updated.");
+
+    await loadAdminOrders();
+
+  } catch (error) {
+
+    alert("Unable to update order: " + error.message);
+
+  }
+
+}
+
+
+// ======================================
+// 14. LOAD ADMIN DASHBOARD
+// ======================================
+
+async function loadAdminData() {
+
+  if (!isAdmin) return;
+
+  await loadAdminProducts();
+
+  await loadAdminOrders();
+
+}
+
+
+// ======================================
+// 15. WEBSITE START
+// ======================================
+
+updateCartCount();
+
+renderCart();
+
+showPage("shop");
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
