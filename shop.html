@@ -325,7 +325,18 @@ footer {
   </div>
 
 </main>
+<!-- PRODUCT DETAILS PAGE -->
 
+<main id="productDetailsPage" class="container hidden">
+
+  <button class="secondary" onclick="showPage('shop')">
+    ← Back to Shop
+  </button>
+
+  <div id="productDetails" class="section-box" style="margin-top:20px;">
+  </div>
+
+</main>
 <!-- CART PAGE -->
 
 <main id="cartPage" class="container hidden">
@@ -599,48 +610,45 @@ function money(value) {
 // ======================================
 function showPage(page) {
 
-  currentPage = page;
+currentPage = page;
 
-  document.getElementById("homePage").classList.add("hidden");
-  document.getElementById("shopPage").classList.add("hidden");
-  document.getElementById("cartPage").classList.add("hidden");
-  document.getElementById("adminLoginPage").classList.add("hidden");
-  document.getElementById("adminDashboardPage").classList.add("hidden");
+document.getElementById("homePage").classList.add("hidden");
+document.getElementById("shopPage").classList.add("hidden");
+document.getElementById("productDetailsPage").classList.add("hidden");
+document.getElementById("cartPage").classList.add("hidden");
+document.getElementById("adminLoginPage").classList.add("hidden");
+document.getElementById("adminDashboardPage").classList.add("hidden");
 
-  if (page === "home") {
-    document.getElementById("homePage").classList.remove("hidden");
-  }
-
-  if (page === "shop") {
-    document.getElementById("shopPage").classList.remove("hidden");
-  }
-
-  if (page === "cart") {
-    document.getElementById("cartPage").classList.remove("hidden");
-    renderCart();
-  }
-
-  if (page === "admin") {
-
-    if (isAdmin) {
-      document.getElementById("adminDashboardPage").classList.remove("hidden");
-      loadAdminData();
-    } else {
-      document.getElementById("adminLoginPage").classList.remove("hidden");
-    }
-
-  }
-
-  window.scrollTo(0, 0);
+if (page === "home") {
+document.getElementById("homePage").classList.remove("hidden");
 }
 
-document.querySelectorAll("[data-page]").forEach(function(button) {
+if (page === "shop") {
+document.getElementById("shopPage").classList.remove("hidden");
+}
 
-  button.addEventListener("click", function() {
-    showPage(button.dataset.page);
-  });
+if (page === "product") {
+document.getElementById("productDetailsPage").classList.remove("hidden");
+}
 
-});
+if (page === "cart") {
+document.getElementById("cartPage").classList.remove("hidden");
+renderCart();
+}
+
+if (page === "admin") {
+
+if (isAdmin) {
+  document.getElementById("adminDashboardPage").classList.remove("hidden");
+  loadAdminData();
+} else {
+  document.getElementById("adminLoginPage").classList.remove("hidden");
+}
+
+}
+
+window.scrollTo(0, 0);
+}
 
 
 
