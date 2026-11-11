@@ -1236,18 +1236,26 @@ async function loadAdminProducts() {
         " | Price: ₹" + money(product.price) +
         " / " + (product.unit || "");
 
-      const deleteButton = document.createElement("button");
+      const editButton = document.createElement("button");
 
-      deleteButton.className = "danger";
-      deleteButton.textContent = "Delete Product";
+editButton.textContent = "Edit Product";
+editButton.addEventListener("click", function() {
+  editProduct(doc.id, product);
+});
 
-      deleteButton.addEventListener("click", function() {
-        deleteProduct(doc.id);
-      });
+const deleteButton = document.createElement("button");
 
-      box.appendChild(title);
-      box.appendChild(details);
-      box.appendChild(deleteButton);
+deleteButton.className = "danger";
+deleteButton.textContent = "Delete Product";
+
+deleteButton.addEventListener("click", function() {
+  deleteProduct(doc.id);
+});
+
+box.appendChild(title);
+box.appendChild(details);
+box.appendChild(editButton);
+box.appendChild(deleteButton);
 
       list.appendChild(box);
 
@@ -1260,7 +1268,43 @@ async function loadAdminProducts() {
   }
 
 }
+async function editProduct(productId, product) {
 
+  if (!isAdmin) return;
+
+  const name = prompt("Product Name:", product.name);
+  if (name === null) return;
+
+  const price = prompt("Product Price:", product.price);
+  if (price === null) return;
+
+  const unit = prompt("Product Unit:", product.unit);
+  if (unit === null) return;
+
+  const image = prompt("Product Image URL:", product.image || "");
+  if (image === null) return;
+
+  const description = prompt("Product Description:", product.description || "");
+  if (description === null) return;
+
+  try {
+    await db.collection("products").doc(productId).update({
+      name: name.trim(),
+      price: Number(price),
+      unit: unit.trim(),
+      image: image.trim(),
+      description: description.trim()
+    });
+
+    alert("Product updated successfully!");
+
+    await loadProducts();
+    await loadAdminProducts();
+
+  } catch (error) {
+    alert("Update failed: " + error.message);
+  }
+  }
 async function deleteProduct(productId) {
 
   if (!isAdmin) return;
