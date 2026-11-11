@@ -701,7 +701,45 @@ async function loadProducts() {
 function renderProducts() {
 
   const productList = document.getElementById("productList");
+function openProductDetails(productId) {
 
+  const product = products.find(function(item) {
+    return item.id === productId;
+  });
+
+  if (!product) {
+    alert("Product not found.");
+    return;
+  }
+
+  const image = safeImageURL(product.image);
+
+  document.getElementById("productDetails").innerHTML = `
+    <div style="text-align:center;">
+      ${
+        image
+        ? `<img src="${escapeHTML(image)}" style="width:100%;max-width:500px;height:300px;object-fit:contain;">`
+        : `<div style="height:250px;">🐔 PoultryMart</div>`
+      }
+    </div>
+
+    <h2>${escapeHTML(product.name)}</h2>
+
+    <p class="price">
+      ₹${money(product.price)} / ${escapeHTML(product.unit || "piece")}
+    </p>
+
+    <p>${escapeHTML(product.description || "No description available.")}</p>
+
+    <p><b>Category:</b> ${escapeHTML(product.category || "Other")}</p>
+
+    <button class="primary" onclick="addToCart('${product.id}')">
+      Add to Cart
+    </button>
+  `;
+
+  showPage("product");
+}
   const category = document.getElementById("categoryFilter").value;
 
   const search = document.getElementById("searchProduct").value
