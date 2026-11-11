@@ -701,79 +701,119 @@ async function loadProducts() {
 
 function renderProducts() {
 
-  const productList = document.getElementById("productList");
+const productList = document.getElementById("productList");
+function openProductDetails(productId) {
 
-  const category = document.getElementById("categoryFilter").value;
-
-  const search = document.getElementById("searchProduct").value
-    .trim()
-    .toLowerCase();
-
-  const filtered = products.filter(function(product) {
-
-    const matchesCategory =
-      category === "all" || product.category === category;
-
-    const matchesSearch =
-      String(product.name || "").toLowerCase().includes(search);
-
-    return matchesCategory && matchesSearch;
-
+  const product = products.find(function(item) {
+    return item.id === productId;
   });
 
-  if (filtered.length === 0) {
-
-    productList.innerHTML =
-      "<p>No products available. Please check again later.</p>";
-
+  if (!product) {
+    alert("Product not found.");
     return;
-
   }
 
-  productList.innerHTML = filtered.map(function(product) {
+  const image = safeImageURL(product.image);
 
-    const image = safeImageURL(product.image);
+  document.getElementById("productDetails").innerHTML = `
+    <div style="text-align:center;">
+      ${
+        image
+        ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(product.name)}" style="width:100%;max-width:500px;height:300px;object-fit:contain;border-radius:10px;background:#eee;">`
+        : `<div style="height:250px;background:#e8eee8;display:flex;align-items:center;justify-content:center;">🐔 PoultryMart</div>`
+      }
+    </div>
 
-    return `
-      <div class="card">
+    <h2 style="margin-top:20px;">
+      ${escapeHTML(product.name)}
+    </h2>
 
-        ${
-          image
-          ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(product.name)}">`
-          : `<div style="height:165px;background:#e8eee8;display:flex;align-items:center;justify-content:center;border-radius:7px;">🐔 PoultryMart</div>`
-        }
+    <p class="price">
+      ₹${money(product.price)} / ${escapeHTML(product.unit || "piece")}
+    </p>
 
-        <h3>${escapeHTML(product.name)}</h3>
+    <p>${escapeHTML(product.description || "No description available.")}</p>
 
-        <p>${escapeHTML(product.description || "")}</p>
+    <p><b>Category:</b> ${escapeHTML(product.category || "Other")}</p>
 
-        <p class="price">
-          ₹${money(product.price)}
-          <span style="font-size:13px;">
-            / ${escapeHTML(product.unit || "piece")}
-          </span>
-        </p>
+    <button class="primary" onclick="addToCart('${product.id}')">
+      Add to Cart
+    </button>
+  `;
 
-        <button
-          class="primary"
-          onclick="addToCart('${product.id}')"
-        >
-          Add to Cart
-        </button>
+  showPage("product");
+  }
+const category = document.getElementById("categoryFilter").value;
 
-      </div>
-    `;
+const search = document.getElementById("searchProduct").value
+.trim()
+.toLowerCase();
 
-  }).join("");
+const filtered = products.filter(function(product) {
+
+const matchesCategory =
+  category === "all" || product.category === category;
+
+const matchesSearch =
+  String(product.name || "").toLowerCase().includes(search);
+
+return matchesCategory && matchesSearch;
+
+});
+
+if (filtered.length === 0) {
+
+productList.innerHTML =
+  "<p>No products available. Please check again later.</p>";
+
+return;
 
 }
 
-document.getElementById("categoryFilter")
-  .addEventListener("change", renderProducts);
+productList.innerHTML = filtered.map(function(product) {
 
-document.getElementById("searchProduct")
-  .addEventListener("input", renderProducts);
+const image = safeImageURL(product.image);
 
+return `
+  <div class="card">
+
+    ${
+      image
+      ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(product.name)}">`
+      : `<div style="height:165px;background:#e8eee8;display:flex;align-items:center;justify-content:center;border-radius:7px;">🐔 PoultryMart</div>`
+    }
+
+    <h3>${escapeHTML(product.name)}</h3>
+
+    <p>${escapeHTML(product.description || "")}</p>
+
+    <p class="price">
+      ₹${money(product.price)}
+      <span style="font-size:13px;">
+        / ${escapeHTML(product.unit || "piece")}
+      </span>
+    </p>
+
+    <button
+      class="secondary"
+      onclick="openProductDetails('${product.id}')"
+    >
+      View Details
+    </button>
+
+    <button
+      class="primary"
+      onclick="addToCart('${product.id}')"
+    >
+      Add to Cart
+    </button>
+
+  </div>
+`;
+
+}).join("");
+
+}
 
 // ======================================
 // 6. SHOPPING CART
