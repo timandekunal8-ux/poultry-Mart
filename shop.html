@@ -701,45 +701,6 @@ async function loadProducts() {
 function renderProducts() {
 
   const productList = document.getElementById("productList");
-function openProductDetails(productId) {
-
-  const product = products.find(function(item) {
-    return item.id === productId;
-  });
-
-  if (!product) {
-    alert("Product not found.");
-    return;
-  }
-
-  const image = safeImageURL(product.image);
-
-  document.getElementById("productDetails").innerHTML = `
-    <div style="text-align:center;">
-      ${
-        image
-        ? `<img src="${escapeHTML(image)}" style="width:100%;max-width:500px;height:300px;object-fit:contain;">`
-        : `<div style="height:250px;">🐔 PoultryMart</div>`
-      }
-    </div>
-
-    <h2>${escapeHTML(product.name)}</h2>
-
-    <p class="price">
-      ₹${money(product.price)} / ${escapeHTML(product.unit || "piece")}
-    </p>
-
-    <p>${escapeHTML(product.description || "No description available.")}</p>
-
-    <p><b>Category:</b> ${escapeHTML(product.category || "Other")}</p>
-
-    <button class="primary" onclick="addToCart('${product.id}')">
-      Add to Cart
-    </button>
-  `;
-
-  showPage("product");
-}
   const category = document.getElementById("categoryFilter").value;
 
   const search = document.getElementById("searchProduct").value
@@ -747,7 +708,6 @@ function openProductDetails(productId) {
     .toLowerCase();
 
   const filtered = products.filter(function(product) {
-
     const matchesCategory =
       category === "all" || product.category === category;
 
@@ -755,7 +715,6 @@ function openProductDetails(productId) {
       String(product.name || "").toLowerCase().includes(search);
 
     return matchesCategory && matchesSearch;
-
   });
 
   if (filtered.length === 0) {
@@ -778,12 +737,10 @@ function openProductDetails(productId) {
         }
 
         <h3>${escapeHTML(product.name)}</h3>
-
         <p>${escapeHTML(product.description || "")}</p>
 
         <p class="price">
-          ₹${money(product.price)}
-          / ${escapeHTML(product.unit || "piece")}
+          ₹${money(product.price)} / ${escapeHTML(product.unit || "piece")}
         </p>
 
         <button class="secondary"
@@ -801,6 +758,47 @@ function openProductDetails(productId) {
 
   }).join("");
 
+}
+
+
+function openProductDetails(productId) {
+
+  const product = products.find(function(item) {
+    return item.id === productId;
+  });
+
+  if (!product) {
+    alert("Product not found.");
+    return;
+  }
+
+  const image = safeImageURL(product.image);
+
+  document.getElementById("productDetails").innerHTML = `
+    <div style="text-align:center;">
+      ${
+        image
+        ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(product.name)}" style="width:100%;max-width:500px;height:300px;object-fit:contain;">`
+        : `<div style="height:250px;">🐔 PoultryMart</div>`
+      }
+    </div>
+
+    <h2>${escapeHTML(product.name)}</h2>
+
+    <p class="price">
+      ₹${money(product.price)} / ${escapeHTML(product.unit || "piece")}
+    </p>
+
+    <p>${escapeHTML(product.description || "No description available.")}</p>
+
+    <p><b>Category:</b> ${escapeHTML(product.category || "Other")}</p>
+
+    <button class="primary" onclick="addToCart('${product.id}')">
+      Add to Cart
+    </button>
+  `;
+
+  showPage("product");
 }
 
 
