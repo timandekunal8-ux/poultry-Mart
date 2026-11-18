@@ -598,29 +598,42 @@ function money(value) {
 // ======================================
 // 3. PAGE NAVIGATION
 // ======================================
+
 function showPage(page) {
 
   currentPage = page;
 
+  // Hide all pages
   document.getElementById("homePage").classList.add("hidden");
   document.getElementById("shopPage").classList.add("hidden");
   document.getElementById("cartPage").classList.add("hidden");
+  document.getElementById("customerPage").classList.add("hidden");
   document.getElementById("adminLoginPage").classList.add("hidden");
   document.getElementById("adminDashboardPage").classList.add("hidden");
 
+  // Home
   if (page === "home") {
     document.getElementById("homePage").classList.remove("hidden");
   }
 
+  // Shop
   if (page === "shop") {
     document.getElementById("shopPage").classList.remove("hidden");
   }
 
+  // Cart
   if (page === "cart") {
     document.getElementById("cartPage").classList.remove("hidden");
     renderCart();
   }
 
+  // Customer Login
+  if (page === "customer") {
+    document.getElementById("customerPage").classList.remove("hidden");
+    updateCustomerStatus();
+  }
+
+  // Admin
   if (page === "admin") {
 
     if (isAdmin) {
@@ -634,14 +647,9 @@ function showPage(page) {
 
   window.scrollTo(0, 0);
 }
+  
 
-document.querySelectorAll("[data-page]").forEach(function(button) {
 
-  button.addEventListener("click", function() {
-    showPage(button.dataset.page);
-  });
-
-});
 
 
 
@@ -1061,7 +1069,200 @@ document.getElementById("checkoutForm").addEventListener("submit", async functio
 
 });
 
+<!-- CUSTOMER LOGIN / SIGN UP -->
 
+<main id="customerPage" class="container hidden">
+
+  <div class="section-box">
+    <h2>Customer Account</h2>
+
+    <div id="customerStatus" class="message">
+      Please log in or create an account.
+    </div>
+
+    <div id="customerForms">
+
+      <h3>Create New Account</h3>
+
+      <form id="customerSignupForm">
+
+        <label>Full Name</label>
+        <input id="signupName" required placeholder="Your full name">
+
+        <label>Email Address</label>
+        <input id="signupEmail" type="email" required placeholder="Your email">
+
+        <label>Password (minimum 6 characters)</label>
+        <input id="signupPassword" type="password" minlength="6"
+          required placeholder="Create password">
+
+        <button type="submit" class="primary">
+          Create Account
+        </button>
+
+      </form>
+
+      <hr style="margin:25px 0;">
+
+      <h3>Already Have an Account?</h3>
+
+      <form id="customerLoginForm">
+
+        <label>Email Address</label>
+        <input id="customerEmail" type="email" required
+          placeholder="Your email">
+
+        <label>Password</label>
+        <input id="customerPassword" type="password" required
+          placeholder="Your password">
+
+        <button type="submit" class="primary">
+          Customer Login
+        </button>
+
+      </form>
+
+      <div id="customerMessage"></div>
+
+    </div>
+
+    <button id="customerLogoutButton" class="danger hidden"
+      type="button">
+      Logout
+    </button>
+
+  </div>
+
+</main>
+  
+// ======================================
+// CUSTOMER AUTHENTICATION
+// ======================================
+
+// Update customer login screen
+function updateCustomerStatus() {
+
+  const user = auth.currentUser;
+  const status = document.getElementById("customerStatus");
+  const forms = document.getElementById("customerForms");
+  const logout = document.getElementById("customerLogoutButton");
+
+  if (user && user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+
+    status.textContent = "Welcome, " + (user.displayName || user.email);
+    forms.classList.add("hidden");
+    logout.classList.remove("hidden");
+
+  } else {
+
+    status.textContent = "Please log in or create an account.";
+    forms.classList.remove("hidden");
+    logout.classList.add("hidden");
+
+  }
+}
+
+// CUSTOMER REGISTRATION
+document.getElementById("customerSignupForm")
+.addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  const name = document.getElementById("signupName").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+
+  try {
+
+    const result = await auth.createUserWithEmailAndPassword(email, password);
+
+    await result.user.updateProfile({ displayName: name });
+
+    showMessage("customerMessage", "Account created successfully!");
+
+    document.getElementById("customerSignupForm").reset();
+
+    updateCustomerStatus();
+
+  } catch (error) {
+
+    showMessage("customerMessage", error.message, true);
+
+  }
+
+});
+
+// CUSTOMER LOGIN
+document.getElementById("customerLoginForm")
+.addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  const email = document.getElementById("customerEmail").value.trim();
+  const password = document.getElementById("customerPassword").value;
+
+  try {
+
+    const result = await auth.signInWithEmailAndPassword(email, password);
+
+    if (result.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+
+      await auth.signOut();
+
+      showMessage("customerMessage", "Please use Admin Login.", true);
+      return;
+
+    }
+
+    showMessage("customerMessage", "Customer login successful!");
+
+    document.getElementById("customerLoginForm").reset();
+
+    updateCustomerStatus();
+
+  } catch (error) {
+
+    showMessage("customerMessage", error.message, true);
+
+  }
+
+});
+
+// CUSTOMER LOGOUT
+document.getElementById("customerLogoutButton")
+.addEventListener("click", async function() {
+
+  try {
+
+    await auth.signOut();
+    updateCustomerStatus();
+
+    showMessage("customerMessage", "You have logged out.");
+
+  } catch (error) {
+
+    showMessage("customerMessage", error.message, true);
+
+  }
+
+});
+
+// RESTORE LOGIN SESSION
+auth.onAuthStateChanged(function(user) {
+
+  isAdmin = !!user &&
+    user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+  if (currentPage === "admin") {
+    showPage("admin");
+  }
+
+  if (currentPage === "customer") {
+    updateCustomerStatus();
+  }
+
+});
+       
 // ======================================
 // 8. ADMIN LOGIN
 // ======================================
