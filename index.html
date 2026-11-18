@@ -1248,9 +1248,13 @@ document.getElementById("customerLogoutButton")
 
 });
 
+});
+
+// CUSTOMER LOGIN TEST
+alert("Customer Login JavaScript loaded successfully");
+
 // RESTORE LOGIN SESSION
 auth.onAuthStateChanged(function(user) {
-
   isAdmin = !!user &&
     user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
