@@ -1135,11 +1135,11 @@ document.getElementById("checkoutForm").addEventListener("submit", async functio
 
 </main>
   
+
 // ======================================
 // CUSTOMER AUTHENTICATION
 // ======================================
 
-// Update customer login screen
 function updateCustomerStatus() {
 
   const user = auth.currentUser;
@@ -1147,7 +1147,8 @@ function updateCustomerStatus() {
   const forms = document.getElementById("customerForms");
   const logout = document.getElementById("customerLogoutButton");
 
-  if (user && user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+  if (user && user.email &&
+      user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
 
     status.textContent = "Welcome, " + (user.displayName || user.email);
     forms.classList.add("hidden");
@@ -1193,10 +1194,9 @@ document.getElementById("customerSignupForm")
 });
 
 // CUSTOMER LOGIN
-  console.log("CUSTOMER LOGIN CODE LOADED");
 document.getElementById("customerLoginForm")
 .addEventListener("submit", async function(event) {
-alert("Login button event is connected");
+
   event.preventDefault();
 
   const email = document.getElementById("customerEmail").value.trim();
@@ -1248,13 +1248,9 @@ document.getElementById("customerLogoutButton")
 
 });
 
-});
-
-// CUSTOMER LOGIN TEST
-alert("Customer Login JavaScript loaded successfully");
-
 // RESTORE LOGIN SESSION
 auth.onAuthStateChanged(function(user) {
+
   isAdmin = !!user &&
     user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
@@ -1267,6 +1263,11 @@ auth.onAuthStateChanged(function(user) {
   }
 
 });
+  
+
+
+
+
        
 // ======================================
 // 8. ADMIN LOGIN
